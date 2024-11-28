@@ -1,0 +1,41 @@
+import './globals.css';
+import type { Metadata } from 'next';
+import { ThemeProvider } from '@/components/providers/theme-provider';
+import { SidebarProvider } from '@/components/providers/sidebar-provider';
+import { Sidebar } from '@/components/layout/sidebar';
+import { Header } from '@/components/layout/header';
+
+
+export const metadata: Metadata = {
+  title: 'Sportefy - Sports Facility Management',
+  description: 'Manage your sports facilities efficiently',
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem={false}
+          storageKey="sportefy-theme"
+        >
+          <SidebarProvider>
+            <div className="flex h-screen overflow-hidden">
+              <Sidebar />
+              <div className="flex-1 overflow-y-auto">
+                <Header />
+                <main className="p-6">{children}</main>
+              </div>
+            </div>
+          </SidebarProvider>
+        </ThemeProvider>
+      </body>
+    </html>
+  );
+}

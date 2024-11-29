@@ -10,7 +10,7 @@ import {
 import { FiEdit } from "react-icons/fi";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
-import {Grounds } from "../../actions/Booking";
+import {Grounds } from "../../actions/Grounds";
 
 const bookings = [
   {

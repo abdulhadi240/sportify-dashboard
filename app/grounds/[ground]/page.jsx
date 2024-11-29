@@ -2,7 +2,7 @@ import Link from "next/link";
 import React from "react";
 import { FaPlus } from "react-icons/fa6";
 import { MdArrowBackIos } from "react-icons/md";
-import { SingleGround } from "../../../actions/Booking";
+import { SingleGround } from "../../../actions/Grounds";
 const page = async ({params}) => {
   const data = await SingleGround(params.ground)
   return (

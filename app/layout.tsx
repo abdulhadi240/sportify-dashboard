@@ -5,7 +5,8 @@ import { SidebarProvider } from '@/components/providers/sidebar-provider';
 import { Sidebar } from '@/components/layout/sidebar';
 import { Header } from '@/components/layout/header';
 import { Suspense } from 'react';
-
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const metadata: Metadata = {
   title: 'Sportefy - Sports Facility Management',
@@ -38,6 +39,7 @@ export default function RootLayout({
             </div>
           </SidebarProvider>
         </ThemeProvider>
+        <ToastContainer />
       </body>
     </html>
   );

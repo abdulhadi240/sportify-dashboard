@@ -29,18 +29,43 @@ export const SingleCourt = async (id) => {
 }
 
 
-export const DeleteCourt= async (id) => {
+export const DeleteCourt = async (id) => {
   const data = await fetch(`https://sportify-1haq.onrender.com/court/delete_court/${id}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`
     }
-  });
-  console.log(data);
+  });  
   
-  return data;
+  console.log(data);
+ 
 }
+
+
+export const CreateCourt = async (name , description , court_location , hourly_rate , min_down_payment) => {
+  const data = await fetch(`https://sportify-1haq.onrender.com/court/create_court`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`
+    },
+    body: JSON.stringify({
+      name: name,
+      description: description,
+      court_location: court_location,  // Pass court_location correctly
+      hourly_rate: hourly_rate,        // Pass hourly_rate correctly
+      min_down_payment: min_down_payment // Pass min_down_payment correctly
+    }),
+  });  
+  
+  const res = await data.json()
+  console.log(res);
+  
+  return res
+ 
+}
+
 
 
 

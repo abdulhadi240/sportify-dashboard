@@ -15,7 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
+import { toast } from "react-toastify";
 
 export const experimental_ppr = true
 
@@ -23,18 +23,27 @@ export const experimental_ppr = true
 export default function Page() {
   const [data, setData] = useState([]);
 
+  // Fetch courts when the component mounts
   useEffect(() => {
     async function fetchCourts() {
       const courts = await Courts();
       setData(courts);
     }
     fetchCourts();
-  }, []);
+  }, []); // Empty dependency array ensures fetch only runs once when component mounts
 
   const handleDelete = async (id) => {
-    await DeleteCourt(id);
-    setData((prevData) => prevData.filter((booking) => booking.id !== id));
+    const res = await DeleteCourt(id);
+    if (!res.status) {
+      toast.success("Court deleted successfully");
+      setData(data.filter((court) => court.id !== id));
+    } else {
+      toast.error("Failed to delete court");
+    }
+    console.log(res);
+    
   };
+
 
   function formatDate(dateString) {
     const date = new Date(dateString);

@@ -6,6 +6,7 @@ import { FaPlus } from "react-icons/fa6";
 import { MdArrowBackIos } from "react-icons/md";
 import { SingleCourt } from "../../../actions/Grounds";
 import { UpdateCourt } from "../../../actions/Grounds";  // Import the UpdateCourt function
+import { toast } from "react-toastify";
 
 const Page = ({ params }) => {
   const [name, setName] = useState("");
@@ -36,12 +37,7 @@ const Page = ({ params }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Ensure hourlyRate is a valid number
-    let parsedHourlyRate = parseFloat(hourlyRate);
-  
-    // Log the parsed value for debugging
-    console.log("Parsed hourlyRate:", parsedHourlyRate);
-  
+    let parsedHourlyRate = parseFloat(hourlyRate);  
     if (isNaN(parsedHourlyRate)) {
       alert("Invalid hourly rate. Please provide a valid number.");
       return;
@@ -59,7 +55,6 @@ const Page = ({ params }) => {
   
     const minDownPayment = 100;
   
-    // Log the request body to verify the data being sent
     console.log({
       name: name,
       description: description,
@@ -78,9 +73,9 @@ const Page = ({ params }) => {
     );
   
     if (!updatedData.statusCode) {
-      alert("Court updated successfully!");
+      toast.success("Court updated successfully.");
     } else {
-      alert("Failed to update the court.");
+      toast.error("Failed to update the court.");
     }
   };
 

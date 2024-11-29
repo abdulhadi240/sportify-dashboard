@@ -5,7 +5,7 @@ import { FaPlus } from "react-icons/fa6";
 import { MdArrowBackIos } from "react-icons/md";
 import { toast } from "react-toastify";
 import { CreateCourt } from "../../../actions/Grounds"; // Ensure this path matches your project structure
-
+import { useRouter } from "next/navigation";
 const Page = () => {
   const [name, setName] = useState("");
   const [type, setType] = useState("Multi Ground");
@@ -16,6 +16,8 @@ const Page = () => {
   const [images, setImages] = useState([]);
   const [videos, setVideos] = useState([]);
 
+
+  const router = useRouter()
   // Handles the form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,6 +36,7 @@ const Page = () => {
     const result = await CreateCourt(name, description, location, parsedHourlyRate, 100); // Adjust min_down_payment as needed
     if (!result.success) {
       toast.success("Court created successfully!");
+      router.push('/grounds')
     } else {
       toast.error(`Failed to create court: ${result.error}`);
     }

@@ -29,7 +29,7 @@ export default function Page() {
       setData(courts);
     }
     fetchCourts();
-  }, [data]);
+  }, []);
 
   const handleDelete = async (id) => {
     await DeleteCourt(id);

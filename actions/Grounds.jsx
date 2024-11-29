@@ -44,7 +44,8 @@ export const DeleteCourt= async (id) => {
 
 
 
-export const UpdateCourt = async (id, name, description, location, rate, down_payment) => {
+// actions/UpdateCourt.js
+export const UpdateCourt = async (id, name, description, courtLocation, hourlyRate, minDownPayment) => {
   const data = await fetch(`https://sportify-1haq.onrender.com/court/update_court/${id}`, {
     method: 'PUT',
     headers: {
@@ -54,13 +55,13 @@ export const UpdateCourt = async (id, name, description, location, rate, down_pa
     body: JSON.stringify({
       name: name,
       description: description,
-      location: location,
-      hourly_rate: rate,
-      down_payment: down_payment,
+      court_location: courtLocation,  // Pass court_location correctly
+      hourly_rate: hourlyRate,        // Pass hourly_rate correctly
+      min_down_payment: minDownPayment // Pass min_down_payment correctly
     }),
   });
 
   const res = await data.json();
-  console.log(res);
+  console.log(res);  // Log the response for debugging purposes
   return res;
 };

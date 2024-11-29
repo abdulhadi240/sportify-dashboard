@@ -8,10 +8,9 @@ import { SingleCourt } from "../../../actions/Grounds";
 import { UpdateCourt } from "../../../actions/Grounds";  // Import the UpdateCourt function
 
 const Page = ({ params }) => {
-  // Initialize state for form data
   const [name, setName] = useState("");
   const [courtLocation, setCourtLocation] = useState("");
-  const [hourlyRate, setHourlyRate] = useState("");
+  const [hourlyRate, setHourlyRate] = useState(5000);
   const [description, setDescription] = useState("");
   const [gameType, setGameType] = useState("Futsal");
   const [courtType, setCourtType] = useState("Multi Ground");
@@ -20,49 +19,71 @@ const Page = ({ params }) => {
   const [loading, setLoading] = useState(true); // To handle loading state
   const [courtId, setCourtId] = useState(null);  // To store the court ID for updating
 
-  // Fetch data on component mount
   useEffect(() => {
     const fetchCourtData = async () => {
       const data = await SingleCourt(params.ground);
       setName(data.name || "");
       setCourtLocation(data.court_location || "");
-      setHourlyRate(data.hourly_rate || "");
+      setHourlyRate(data.hourly_rate || 5000);
       setDescription(data.description || "");
       setCourtId(data.id); // Set the court ID for future updates
       setLoading(false); // Set loading to false after data is fetched
     };
 
     fetchCourtData();
-  }, [params.ground]);
+  }, []);
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Ensure that courtId is available for the update request
+    
+    // Ensure hourlyRate is a valid number
+    let parsedHourlyRate = parseFloat(hourlyRate);
+  
+    // Log the parsed value for debugging
+    console.log("Parsed hourlyRate:", parsedHourlyRate);
+  
+    if (isNaN(parsedHourlyRate)) {
+      alert("Invalid hourly rate. Please provide a valid number.");
+      return;
+    }
+  
     if (!courtId) {
       alert("Court ID is missing, cannot update.");
       return;
     }
-
-    // Call the UpdateCourt function to update the court data
+  
+    if (!courtLocation || typeof courtLocation !== 'string') {
+      alert("Court location is required and must be a valid string.");
+      return;
+    }
+  
+    const minDownPayment = 100;
+  
+    // Log the request body to verify the data being sent
+    console.log({
+      name: name,
+      description: description,
+      court_location: courtLocation,
+      hourly_rate: parsedHourlyRate,
+      min_down_payment: minDownPayment
+    });
+  
     const updatedData = await UpdateCourt(
       courtId,
       name,
       description,
       courtLocation,
-      hourlyRate,
-      5000
+      parsedHourlyRate,  // Ensure the value passed is parsed
+      minDownPayment
     );
-
-    if (updatedData.success) {
+  
+    if (!updatedData.statusCode) {
       alert("Court updated successfully!");
     } else {
       alert("Failed to update the court.");
     }
   };
 
-  // Show loading state while data is being fetched
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -131,7 +152,7 @@ const Page = ({ params }) => {
               <div>
                 <label className="block text-sm">Amount</label>
                 <input
-                  type="text"
+                  type="number"
                   value={hourlyRate}
                   onChange={(e) => setHourlyRate(e.target.value)}
                   placeholder="Rs: 5000"

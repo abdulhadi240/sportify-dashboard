@@ -20,6 +20,12 @@ const config: Config = {
         sm: 'calc(var(--radius) - 4px)',
       },
       colors: {
+        primary1: {
+          DEFAULT: '#6e3b95'
+        },
+        secondary1: {
+          DEFAULT: '#b0b0b0',
+        },
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {

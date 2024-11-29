@@ -82,7 +82,7 @@ const page = async ({params}) => {
               <div>
                 <label className="block text-lg   ml-3">Add Images</label>
                 <div className="flex flex-wrap gap-2 mt-2 justify-center">
-                  {[...Array(5)].map((_, index) => (
+                  {[...Array(4)].map((_, index) => (
                     // eslint-disable-next-line react/jsx-key
                     <label
                       for="uploadFile1"

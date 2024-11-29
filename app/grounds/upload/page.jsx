@@ -74,7 +74,7 @@ const page = () => {
               <div>
                 <label className="block text-lg   ml-3">Add Images</label>
                 <div className="flex flex-wrap gap-2 mt-2 justify-center">
-                  {[...Array(5)].map((_, index) => (
+                  {[...Array(4)].map((_, index) => (
                     // eslint-disable-next-line react/jsx-key
                     <label
                       for="uploadFile1"
@@ -123,7 +123,7 @@ const page = () => {
               </div>
               <div className="mt-6 flex justify-center">
             <button className="bg-primary1 text-white w-full ml-2 p-2 rounded hover:bg-primary1/80">
-              Upload
+              Create
             </button>
           </div>
             </div>

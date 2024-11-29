@@ -4,6 +4,7 @@ import { ThemeProvider } from '@/components/providers/theme-provider';
 import { SidebarProvider } from '@/components/providers/sidebar-provider';
 import { Sidebar } from '@/components/layout/sidebar';
 import { Header } from '@/components/layout/header';
+import { Suspense } from 'react';
 
 
 export const metadata: Metadata = {
@@ -30,7 +31,9 @@ export default function RootLayout({
               <Sidebar />
               <div className="flex-1 overflow-y-auto">
                 <Header />
+                <Suspense fallback={'Loading...'}>
                 <main className="p-6">{children}</main>
+                </Suspense>
               </div>
             </div>
           </SidebarProvider>

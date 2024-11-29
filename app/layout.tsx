@@ -7,6 +7,7 @@ import { Header } from '@/components/layout/header';
 import { Suspense } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export const metadata: Metadata = {
   title: 'Sportefy - Sports Facility Management',
@@ -32,7 +33,7 @@ export default function RootLayout({
               <Sidebar />
               <div className="flex-1 overflow-y-auto">
                 <Header />
-                <Suspense fallback={'Loading...'}>
+                <Suspense fallback={<Skeleton/>}>
                 <main className="p-6">{children}</main>
                 </Suspense>
               </div>

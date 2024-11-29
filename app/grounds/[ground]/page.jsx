@@ -7,6 +7,7 @@ import { MdArrowBackIos } from "react-icons/md";
 import { SingleCourt } from "../../../actions/Grounds";
 import { UpdateCourt } from "../../../actions/Grounds";  // Import the UpdateCourt function
 import { toast } from "react-toastify";
+import Skeleton from "@/components/Skeleton";
 
 const Page = ({ params }) => {
   const [name, setName] = useState("");
@@ -80,7 +81,7 @@ const Page = ({ params }) => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div><Skeleton/></div>;
   }
 
   return (

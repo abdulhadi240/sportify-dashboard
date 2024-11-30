@@ -1,84 +1,27 @@
-"use client";
 
-import React, { useState, useEffect, Suspense } from "react";
+import React, { Suspense } from "react";
 import Link from "next/link";
-import { FiEdit } from "react-icons/fi";
-import { MdDelete } from "react-icons/md";
-import { IoDownloadOutline } from "react-icons/io5";
 import { FaPlus } from "react-icons/fa";
-import { Courts, DeleteCourt } from "../../actions/Grounds";
+import BodyOfTable from "@/components/BodyOfTable";
 import {
   Table,
-  TableBody,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { toast } from "react-toastify";
+import { Skeleton } from "@/components/ui/skeleton";
+import Export from "@/components/Export";
 
-export const experimental_ppr = true
+export const experimental_ppr = true;
 
-
-export default function Page() {
-  const [data, setData] = useState([]);
-
-  // Fetch courts when the component mounts
-  useEffect(() => {
-    async function fetchCourts() {
-      const courts = await Courts();
-      setData(courts);
-    }
-    fetchCourts();
-  }, []); // Empty dependency array ensures fetch only runs once when component mounts
-
-  const handleDelete = async (id) => {
-    const res = await DeleteCourt(id);
-    if (!res.status) {
-      toast.success("Court deleted successfully");
-      setData(data.filter((court) => court.id !== id));
-    } else {
-      toast.error("Failed to delete court");
-    }
-    console.log(res);
-    
-  };
-
-
-  function formatDate(dateString) {
-    const date = new Date(dateString);
-    const day = date.getDate();
-
-    const monthNames = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-    const month = monthNames[date.getMonth()];
-
-    const year = date.getFullYear();
-
-    return `${day} ${month} ${year}`;
-  }
-
+export default async function Page() {
+  
   return (
     <div className="space-y-8">
       <div className="flex justify-between">
         <h2 className="text-3xl font-bold tracking-tight">Grounds</h2>
         <div className="flex gap-3">
-          <button className="px-6 bg-primary1 text-white rounded-lg flex items-center justify-center gap-2">
-            <IoDownloadOutline />
-            <span className="hidden md:block">Export</span>
-          </button>
+          <Export/>
           <Link
             href="/grounds/create"
             className="px-6 bg-primary1 text-white rounded-lg flex items-center justify-center gap-2"
@@ -101,35 +44,8 @@ export default function Page() {
               <TableHead>ACTION</TableHead>
             </TableRow>
           </TableHeader>
-          <Suspense fallback={"loading"}>
-            <TableBody>
-              {data.map((booking) => (
-                <TableRow key={booking.id}>
-                  <TableCell>{booking.court_id}</TableCell>
-                  <TableCell>{booking.name}</TableCell>
-                  <TableCell>{booking.game || "Cricket"}</TableCell>
-                  <TableCell>{booking.court_location}</TableCell>
-                  <TableCell>{booking.hourly_rate}</TableCell>
-                  <TableCell>{formatDate(booking.created_at)}</TableCell>
-                  <TableCell>
-                    <div className="flex gap-2">
-                      <Link
-                        href={`/grounds/${booking.id}`}
-                        className="text-primary1 w-8 h-8 bg-[#f7edfa] flex justify-center items-center rounded-full"
-                      >
-                        <FiEdit />
-                      </Link>
-                      <button
-                        onClick={() => handleDelete(booking.id)}
-                        className="text-primary1 hover:cursor-pointer w-8 h-8 bg-[#f7edfa] flex justify-center items-center rounded-full underline"
-                      >
-                        <MdDelete />
-                      </button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
+          <Suspense fallback={<Skeleton />}>
+            <BodyOfTable/>
           </Suspense>
         </Table>
       </div>

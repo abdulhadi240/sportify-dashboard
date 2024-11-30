@@ -2,7 +2,7 @@ import React from "react";
 
 const Skeleton = () => {
   return (
-    <div className="min-h-screen flex justify-center items-center bg-gray-100 p-4">
+    <div className="min-h-screen flex justify-center items-center bg-gray-100 p-2 md:p-4">
       <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-6xl">
         {/* Header Section */}
         <div className="flex items-center mb-6">
@@ -55,7 +55,7 @@ const Skeleton = () => {
                     key={index}
                     className="w-40 h-40  bg-[#f9f9fb] rounded-lg flex flex-col items-center justify-center animate-pulse"
                   >
-                    <div className="h-10 w-10 bg-gray-400 rounded-full"></div>
+                    <div className="h-10 w-10 bg-[#ece8f2] rounded-full"></div>
                     <p className="text-sm text-gray-400 mt-4">
                       {index === 0 ? "Primary" : "Secondary"}
                     </p>

@@ -2,7 +2,7 @@
 import React, { Suspense } from "react";
 import Link from "next/link";
 import { FaPlus } from "react-icons/fa";
-import BodyGames from "@/components/BodyGames";
+import BodyOfTable from "@/components/BodyOfTable";
 import {
   Table,
   TableHead,
@@ -19,15 +19,15 @@ export default async function Page() {
   return (
     <div className="space-y-8">
       <div className="flex justify-between">
-        <h2 className="text-3xl font-bold tracking-tight">Games</h2>
+        <h2 className="text-3xl font-bold tracking-tight">PAYMENTS</h2>
         <div className="flex gap-3">
           <Export/>
           <Link
-            href="/games/create"
+            href="/grounds/create"
             className="px-6 bg-primary1 text-white rounded-lg flex items-center justify-center gap-2"
           >
             <FaPlus />
-            <span className="hidden md:block">Create Game</span>
+            <span className="hidden md:block">Create Payment</span>
           </Link>
         </div>
       </div>
@@ -35,16 +35,17 @@ export default async function Page() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>ID</TableHead>
-              <TableHead>NAME</TableHead>
-              <TableHead>CATEGORY</TableHead>
+              <TableHead>CUSTOMER</TableHead>
+              <TableHead>GROUND</TableHead>
+              <TableHead>PAYMENT</TableHead>
+              <TableHead>DATE</TableHead>
+              <TableHead>METHOD</TableHead>
               <TableHead>STATUS</TableHead>
-              <TableHead>BOOKING</TableHead>
               <TableHead>ACTION</TableHead>
             </TableRow>
           </TableHeader>
           <Suspense fallback={<Skeleton />}>
-            <BodyGames/>
+            <BodyOfTable/>
           </Suspense>
         </Table>
       </div>

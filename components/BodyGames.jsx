@@ -8,17 +8,17 @@ import {
 import Link from 'next/link';
 import { FiEdit } from 'react-icons/fi';
 import { MdDelete } from 'react-icons/md';
-import { Courts, DeleteCourt } from '@/actions/Grounds';
+import { AllGames, Courts, DeleteCourt } from '@/actions/Grounds';
 import {Skeleton} from '@/components/ui/skeleton';
 
 
-const BodyOfTable = () => {
+const   BodyGames = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
-      const response = await Courts();
+      const response = await AllGames();
       setData(response);
       setLoading(false);
     }
@@ -66,16 +66,15 @@ const BodyOfTable = () => {
     <TableBody>
       {data.map((booking) => (
         <TableRow key={booking.id} className='hover:bg-[#f4eef8]'>
-          <TableCell>{booking.court_id}</TableCell>
+          <TableCell>{booking.court_id || '1'}</TableCell>
           <TableCell>{booking.name}</TableCell>
-          <TableCell>{booking.game || 'Cricket'}</TableCell>
-          <TableCell>{booking.court_location}</TableCell>
-          <TableCell>{booking.hourly_rate}</TableCell>
-          <TableCell>{formatDate(booking.created_at)}</TableCell>
+          <TableCell>{booking.category || 'outdoor'}</TableCell>
+          <TableCell>{booking.status || 'Pending'}</TableCell>
+          <TableCell>{booking.total || '15'}</TableCell>
           <TableCell>
             <div className="flex gap-2">
               <Link
-                href={`/grounds/${booking.id}`}
+                href={`/games/${booking.id}`}
                 className="text-primary1 w-8 h-8 bg-[#f7edfa] flex justify-center items-center rounded-full"
               >
                 <FiEdit />
@@ -94,4 +93,4 @@ const BodyOfTable = () => {
   );
 };
 
-export default BodyOfTable;
+export default BodyGames;

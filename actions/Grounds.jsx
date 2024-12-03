@@ -90,3 +90,87 @@ export const UpdateCourt = async (id, name, description, courtLocation, hourlyRa
   console.log(res);  // Log the response for debugging purposes
   return res;
 };
+
+
+
+
+export const SingleCourtImage = async (id) => {
+  const data = await fetch(`https://sportify-1haq.onrender.com/court/get_court_media/${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${process.env.BEARER_TOKEN}`
+    }
+  });
+
+  const res = await data.json();
+  console.log(res);
+  return res;
+}
+
+
+
+
+export const AllGames = async () => {
+  const data = await fetch(`https://sportify-1haq.onrender.com/game/get_games`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${process.env.BEARER_TOKEN}`
+    }
+  });
+
+  const res = await data.json();
+  console.log(res);
+  return res;
+}
+
+
+export const SingleGame = async (id) => {
+  const data = await fetch(`https://sportify-1haq.onrender.com/game/get_court_games/${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${process.env.BEARER_TOKEN}`
+    }
+  });
+
+  const res = await data.json();
+  console.log(res);
+  return res;
+}
+
+// actions/UpdateCourt.js
+export const UpdateGame = async (id, name, category ,person , date , description) => {
+  const data = await fetch(`https://sportify-1haq.onrender.com/court/update_game/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`,
+    },
+    body: JSON.stringify({
+      name: name,
+    }),
+  });
+
+  const res = await data.json();
+  console.log(res);  // Log the response for debugging purposes
+  return res;
+};
+
+
+
+// actions/UpdateCourt.js
+export const GetAllUser = async () => {
+  const data = await fetch(`https://sportify-1haq.onrender.com/admin/get_users`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`,
+    },
+  });
+
+  const res = await data.json();
+  console.log(res);  // Log the response for debugging purposes
+  return res;
+};

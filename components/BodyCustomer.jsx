@@ -8,17 +8,19 @@ import {
 import Link from 'next/link';
 import { FiEdit } from 'react-icons/fi';
 import { MdDelete } from 'react-icons/md';
-import { Courts, DeleteCourt } from '@/actions/Grounds';
+import {GetAllUser } from '@/actions/Grounds';
 import {Skeleton} from '@/components/ui/skeleton';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 
-const BodyOfTable = () => {
+
+const BodyCustomer = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
-      const response = await Courts();
+      const response = await GetAllUser();
       setData(response);
       setLoading(false);
     }
@@ -66,16 +68,21 @@ const BodyOfTable = () => {
     <TableBody>
       {data.map((booking) => (
         <TableRow key={booking.id} className='hover:bg-[#f4eef8]'>
-          <TableCell>{booking.court_id}</TableCell>
-          <TableCell>{booking.name}</TableCell>
-          <TableCell>{booking.game || 'Cricket'}</TableCell>
-          <TableCell>{booking.court_location}</TableCell>
-          <TableCell>{booking.hourly_rate}</TableCell>
-          <TableCell>{formatDate(booking.created_at)}</TableCell>
+          <TableCell>{booking.name || 'Christine Brooks'}</TableCell>
+          <TableCell>{booking.email || 'example@gmail.com'}</TableCell>
+          <TableCell>{booking.user_phone || '+92-3334-567891'}</TableCell>
+          <TableCell>{booking.secondary_user_phone || '+92-3334-567891'}</TableCell>
+          <TableCell>
+          <Avatar>
+            <AvatarImage src="https://github.com/shadcn.png" alt="User" />
+            <AvatarFallback>MR</AvatarFallback>
+          </Avatar>
+          </TableCell>
+          <TableCell>{formatDate(booking.created_at) || '04 sep 2024'}</TableCell>
           <TableCell>
             <div className="flex gap-2">
               <Link
-                href={`/grounds/${booking.id}`}
+                href={`/customers/${booking.id}`}
                 className="text-primary1 w-8 h-8 bg-[#f7edfa] flex justify-center items-center rounded-full"
               >
                 <FiEdit />
@@ -94,4 +101,4 @@ const BodyOfTable = () => {
   );
 };
 
-export default BodyOfTable;
+export default BodyCustomer;

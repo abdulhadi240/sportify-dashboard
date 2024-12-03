@@ -55,11 +55,6 @@ const routes = [
     icon: CreditCard,
     href: "/payments",
   },
-  {
-    label: "Live Scoring",
-    icon: Activity,
-    href: "/live-scoring",
-  },
 ];
 
 export function Sidebar() {

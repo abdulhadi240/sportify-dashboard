@@ -69,7 +69,7 @@ const   BodyGames = () => {
           <TableCell>{index+1}</TableCell>
           <TableCell>{booking.name || ''}</TableCell>
           <TableCell>{booking.category || ''}</TableCell>
-          <TableCell>{booking.status || ''}</TableCell>
+          <TableCell>{booking.status || 'Published'}</TableCell>
           <TableCell>{booking.total || ''}</TableCell>
           <TableCell>
             <div className="flex gap-2">

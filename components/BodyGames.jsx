@@ -8,7 +8,7 @@ import {
 import Link from 'next/link';
 import { FiEdit } from 'react-icons/fi';
 import { MdDelete } from 'react-icons/md';
-import { AllGames, Courts, DeleteCourt } from '@/actions/Grounds';
+import { AllGames, Courts, DeleteCourt, DeleteGame } from '@/actions/Grounds';
 import {Skeleton} from '@/components/ui/skeleton';
 
 
@@ -27,7 +27,7 @@ const   BodyGames = () => {
 
 
   const HandleDelete = async (id) => {
-    await DeleteCourt(id)
+    await DeleteGame(id)
     const response = await Courts();
     setData(response);
     setLoading(false);
@@ -66,11 +66,11 @@ const   BodyGames = () => {
     <TableBody>
       {data.map((booking) => (
         <TableRow key={booking.id} className='hover:bg-[#f4eef8]'>
-          <TableCell>{booking.court_id || '1'}</TableCell>
-          <TableCell>{booking.name}</TableCell>
-          <TableCell>{booking.category || 'outdoor'}</TableCell>
-          <TableCell>{booking.status || 'Pending'}</TableCell>
-          <TableCell>{booking.total || '15'}</TableCell>
+          <TableCell>{booking.court_id || ''}</TableCell>
+          <TableCell>{booking.name || ''}</TableCell>
+          <TableCell>{booking.category || ''}</TableCell>
+          <TableCell>{booking.status || ''}</TableCell>
+          <TableCell>{booking.total || ''}</TableCell>
           <TableCell>
             <div className="flex gap-2">
               <Link

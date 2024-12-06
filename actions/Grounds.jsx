@@ -161,24 +161,6 @@ export const UpdateGame = async (id, name, category ,person , date , description
   return res;
 };
 
-
-
-// actions/UpdateCourt.js
-export const GetAllUser = async () => {
-  const data = await fetch(`https://sportify-1haq.onrender.com/admin/get_users`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`,
-    },
-  });
-
-  const res = await data.json();
-  console.log(res);  // Log the response for debugging purposes
-  return res;
-};
-
-
 export const CreateGame = async (name , category , person , date , description) => {
   const data = await fetch(`https://sportify-1haq.onrender.com/game/create_game`, {
     method: 'POST',
@@ -200,3 +182,36 @@ export const CreateGame = async (name , category , person , date , description) 
   return res
  
 }
+
+// actions/UpdateCourt.js
+export const DeleteGame = async (id) => {
+  const data = await fetch(`https://sportify-1haq.onrender.com/game/delete_game/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`,
+    },
+    
+  });
+
+  const res = await data.json();
+  console.log(res);  // Log the response for debugging purposes
+  return res;
+};
+
+// actions/UpdateCourt.js
+export const GetAllUser = async () => {
+  const data = await fetch(`https://sportify-1haq.onrender.com/admin/get_users`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`,
+    },
+  });
+
+  const res = await data.json();
+  console.log(res);  // Log the response for debugging purposes
+  return res;
+};
+
+

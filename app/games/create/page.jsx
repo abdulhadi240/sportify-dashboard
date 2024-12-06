@@ -4,17 +4,29 @@ import React, { useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { MdArrowBackIos } from "react-icons/md";
 import { toast } from "react-toastify";
-import { CreateCourt } from "../../../actions/Grounds"; // Ensure this path matches your project structure
+import { CreateCourt, CreateGame } from "../../../actions/Grounds"; // Ensure this path matches your project structure
 import { useRouter } from "next/navigation";
 const Page = () => {
   const [name, setName] = useState("");
-  const [category, setCategory] = useState("Outdoor");
+  const [category, setCategory] = useState("outdoor");
   const [person, setPerson] = useState("5 V 5");
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState(getCurrentDate());
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
   const [images, setImages] = useState([]);
   const [videos, setVideos] = useState([]);
+
+
+
+
+  function getCurrentDate() {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
 
 
   const router = useRouter()
@@ -22,30 +34,22 @@ const Page = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!name || !location || !amount || !description) {
+    if (!name  || !category || !person || !description) {
       toast.error("Please fill all required fields.");
       return;
     }
 
-    let parsedHourlyRate = parseFloat(amount);  
-    if (isNaN(parsedHourlyRate)) {
-      alert("Invalid hourly rate. Please provide a valid number.");
-      return;
-    }
+    
 
-    const result = await CreateCourt(name, description, location, parsedHourlyRate, 100); // Adjust min_down_payment as needed
+    const result = await CreateGame(name, category, person, description); // Adjust min_down_payment as needed
     if (!result.success) {
       toast.success("Court created successfully!");
-      router.push('/grounds')
+      router.push('/games')
+      console.log(result);
+      
     } else {
       toast.error(`Failed to create court: ${result.error}`);
     }
-  };
-
-  const handleFileChange = (e, setState) => {
-    const files = Array.from(e.target.files);
-    const urls = files.map((file) => URL.createObjectURL(file));
-    setState((prev) => [...prev, ...urls]);
   };
 
   return (
@@ -75,14 +79,13 @@ const Page = () => {
                   />
                 </div>
                 <div className="w-1/2 pr-2">
-                  <label className="block text-sm">Category</label>
-                  <input
-                    type="text"
-                    placeholder="Enter ground Category"
-                    value={category}
-                    onChange={(e) => setName(e.target.value)}
-                    className="w-full mt-1 p-2 text-sm bg-[#f9f9fb] border-gray-300 rounded"
-                  />
+                  <label  className="block text-sm">Category</label>
+                  <select className="w-full mt-1 p-2 text-sm bg-[#f9f9fb] border-gray-300 rounded" name="Category" value={category} id="">
+                    <option value="outdoor">Outdoor</option>
+                    <option value="indoor">Indoor</option>
+                    <option value="multi">Multi Purpose</option>
+                  </select>
+                  
                 </div>
               </div>
               <div className="flex justify-between">
@@ -92,17 +95,17 @@ const Page = () => {
                     type="text"
                     placeholder="5 V 5"
                     value={person}
-                    onChange={(e) => setName(e.target.value)}
+                    onChange={(e) => setPerson(e.target.value)}
                     className="w-full mt-1 p-2 text-sm bg-[#f9f9fb] border-gray-300 rounded"
                   />
                 </div>
                 <div className="w-1/2 pr-2">
                   <label className="block text-sm">Date</label>
                   <input
-                    type="text"
+                    type="date"
                     placeholder="Location"
                     value={date}
-                    onChange={(e) => setLocation(e.target.value)}
+                    onChange={(e) => setDate(e.target.value)}
                     className="w-full mt-1 p-2 text-sm bg-[#f9f9fb] border-gray-300 rounded"
                   />
                 </div>
@@ -147,7 +150,7 @@ const Page = () => {
               </div>
               <div>
                 <label className="block text-lg">Add Videos</label>
-                <div className="flex flex-wrap gap-2 mt-2 justify-center">
+                <div className="flex flex-wrap  gap-2 mt-2 justify-center">
                   {[...Array(2)].map((_, index) => (
                     <label
                       key={index}

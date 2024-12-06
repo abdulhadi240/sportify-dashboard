@@ -4,32 +4,39 @@ import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { MdArrowBackIos } from "react-icons/md";
-import { SingleCourt, SingleGame } from "../../../actions/Grounds";
-import { UpdateCourt } from "../../../actions/Grounds";  // Import the UpdateCourt function
+import { SingleGame, UpdateGame } from "../../../actions/Grounds";
 import { toast } from "react-toastify";
 import Skeleton from "@/components/Skeleton";
-
+import { useRouter } from "next/navigation";
 const Page = ({ params }) => {
+  const [id, setId] = useState("");
   const [name, setName] = useState("");
-  const [courtLocation, setCourtLocation] = useState("");
-  const [hourlyRate, setHourlyRate] = useState(5000);
+  const [category, setCategory] = useState("outdoor");
+  const [person, setPerson] = useState("5 V 5");
+  const [date, setDate] = useState(getCurrentDate());
   const [description, setDescription] = useState("");
-  const [gameType, setGameType] = useState("Futsal");
-  const [courtType, setCourtType] = useState("Multi Ground");
-  const [images, setImages] = useState([]);
-  const [videos, setVideos] = useState([]);
-  const [loading, setLoading] = useState(true); // To handle loading state
-  const [courtId, setCourtId] = useState(null);  // To store the court ID for updating
+  const [loading , setLoading] = useState(true);
+
+  const router = useRouter();
+
+  function getCurrentDate() {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
 
   useEffect(() => {
     const fetchCourtData = async () => {
       const data = await SingleGame(params.id);
-      setName(data.name || "");
-      setCourtLocation(data.court_location || "");
-      setHourlyRate(data.hourly_rate || 5000);
-      setDescription(data.description || "");
-      setCourtId(data.id); // Set the court ID for future updates
-      setLoading(false); // Set loading to false after data is fetched
+      setId(data.id);
+      setName(data.name);
+      setCategory(data.category);
+      setPerson(data.person);
+      setDate(data.description);
+      setLoading(false);
     };
 
     fetchCourtData();
@@ -37,44 +44,21 @@ const Page = ({ params }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    let parsedHourlyRate = parseFloat(hourlyRate);  
-    if (isNaN(parsedHourlyRate)) {
-      alert("Invalid hourly rate. Please provide a valid number.");
-      return;
-    }
   
-    if (!courtId) {
-      alert("Court ID is missing, cannot update.");
-      return;
-    }
-  
-    if (!courtLocation || typeof courtLocation !== 'string') {
-      alert("Court location is required and must be a valid string.");
-      return;
-    }
-  
-    const minDownPayment = 100;
-  
-    console.log({
-      name: name,
-      description: description,
-      court_location: courtLocation,
-      hourly_rate: parsedHourlyRate,
-      min_down_payment: minDownPayment
-    });
-  
-    const updatedData = await UpdateCourt(
-      courtId,
+    const updatedData = await UpdateGame(
+      id,
       name,
-      description,
-      courtLocation,
-      parsedHourlyRate,  // Ensure the value passed is parsed
-      minDownPayment
+      category,
+      person,
+      date,  // Ensure the value passed is parsed
+      description
     );
   
     if (!updatedData.statusCode) {
       toast.success("Court updated successfully.");
+      console.log(updatedData);
+      router.push('/games')
+      
     } else {
       toast.error("Failed to update the court.");
     }
@@ -96,71 +80,62 @@ const Page = ({ params }) => {
               Games / <span className="font-light">Edit Game</span>
             </h1>
           </div>
-          <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <form
+            onSubmit={handleSubmit}
+            className="grid grid-cols-1 md:grid-cols-2 gap-4"
+          >
             {/* Left Column */}
             <div className="space-y-4">
-              <div>
-                <div className="flex justify-between">
-                  <div className="w-1/2 pr-2">
-                    <label className="block text-sm">Name</label>
-                    <input
-                      type="text"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      placeholder="Enter ground name"
-                      className="w-full mt-1 p-2 text-sm bg-[#f9f9fb] border-gray-300 rounded"
-                    />
-                  </div>
-                  <div className="w-1/2 pl-2">
-                    <label className="block text-sm">Select Type</label>
-                    <select
-                      className="w-full mt-1 p-2 text-sm bg-[#f9f9fb] border-gray-300 rounded"
-                      value={courtType}
-                      onChange={(e) => setCourtType(e.target.value)}
-                    >
-                      <option>Multi Ground</option>
-                    </select>
-                  </div>
+              <div className="flex justify-between">
+                <div className="w-1/2 pr-2">
+                  <label className="block text-sm">Name</label>
+                  <input
+                    type="text"
+                    placeholder="Enter ground name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full mt-1 p-2 text-sm bg-[#f9f9fb] border-gray-300 rounded"
+                  />
+                </div>
+                <div className="w-1/2 pr-2">
+                  <label  className="block text-sm">Category</label>
+                  <select className="w-full mt-1 p-2 text-sm bg-[#f9f9fb] border-gray-300 rounded" name="Category" value={category} id="" onChange={(e) => setCategory(e.target.value)}>
+                    <option value="outdoor">Outdoor</option>
+                    <option value="indoor">Indoor</option>
+                    <option value="multi">Multi Purpose</option>
+                  </select>
+                  
                 </div>
               </div>
               <div className="flex justify-between">
-                <div className="w-1/2 pr-2">
-                  <label className="block text-sm">Select Games</label>
-                  <select
-                    className="w-full mt-1 p-2 text-sm bg-[#f9f9fb] border-gray-300 rounded"
-                    value={gameType}
-                    onChange={(e) => setGameType(e.target.value)}
-                  >
-                    <option>Futsal</option>
-                  </select>
-                </div>
-                <div className="w-1/2 pr-2">
-                  <label className="block text-sm">Location</label>
+              <div className="w-1/2 pr-2">
+                  <label className="block text-sm">Person</label>
                   <input
                     type="text"
-                    value={courtLocation}
-                    onChange={(e) => setCourtLocation(e.target.value)}
+                    placeholder="5 V 5"
+                    value={person}
+                    onChange={(e) => setPerson(e.target.value)}
+                    className="w-full mt-1 p-2 text-sm bg-[#f9f9fb] border-gray-300 rounded"
+                  />
+                </div>
+                <div className="w-1/2 pr-2">
+                  <label className="block text-sm">Date</label>
+                  <input
+                    type="date"
                     placeholder="Location"
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
                     className="w-full mt-1 p-2 text-sm bg-[#f9f9fb] border-gray-300 rounded"
                   />
                 </div>
               </div>
-              <div>
-                <label className="block text-sm">Amount</label>
-                <input
-                  type="number"
-                  value={hourlyRate}
-                  onChange={(e) => setHourlyRate(e.target.value)}
-                  placeholder="Rs: 5000"
-                  className="w-full mt-1 p-2 border bg-[#f9f9fb] text-sm border-gray-300 rounded"
-                />
-              </div>
+              
               <div>
                 <label className="block text-sm">Description</label>
                 <textarea
+                  placeholder="Description"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Description"
                   className="w-full mt-1 p-2 border text-sm bg-[#f9f9fb] border-gray-300 rounded h-20"
                 ></textarea>
               </div>
@@ -174,18 +149,16 @@ const Page = ({ params }) => {
                   {[...Array(4)].map((_, index) => (
                     <label
                       key={index}
-                      htmlFor="uploadFile1"
-                      className="bg-[#f9f9fb] font-semibold text-base rounded max-w-md h-52 w-52 flex flex-col items-center justify-center cursor-pointer border bg-[#f9f9fb]-[1px] border-gray-300 font-[sans-serif]"
+                      className="bg-[#f9f9fb] font-semibold text-base rounded max-w-md h-52 w-52 flex flex-col items-center justify-center cursor-pointer border border-gray-300"
                     >
-                      <div className="h-14 w-14 rounded-full text-primary1 bg-[#ece8f2] flex justify-center items-center">
+                      <div className="h-14 w-14 rounded-full bg-[#ece8f2] flex justify-center items-center">
                         <FaPlus size={20} />
                       </div>
                       <input
                         type="file"
-                        id="uploadFile1"
+                        onChange={(e) => handleFileChange(e, setImages)}
                         className="hidden"
                         accept="image/*"
-                        onChange={(e) => setImages(e.target.files)}
                       />
                       <p className="mt-4 text-sm tracking-wide text-black/60 font-light">
                         {index === 0 ? "Primary" : "Secondary"}
@@ -196,22 +169,20 @@ const Page = ({ params }) => {
               </div>
               <div>
                 <label className="block text-lg">Add Videos</label>
-                <div className="flex flex-wrap gap-2 mt-2 justify-center">
+                <div className="flex flex-wrap  gap-2 mt-2 justify-center">
                   {[...Array(2)].map((_, index) => (
                     <label
                       key={index}
-                      htmlFor="uploadFile1"
-                      className="bg-[#f9f9fb] font-semibold text-base rounded max-w-md h-52 w-52 flex flex-col items-center justify-center cursor-pointer border bg-[#f9f9fb]-[1px] border-gray-300 font-[sans-serif]"
+                      className="bg-[#f9f9fb] font-semibold text-base rounded max-w-md h-52 w-52 flex flex-col items-center justify-center cursor-pointer border border-gray-300"
                     >
-                      <div className="h-14 w-14 rounded-full text-primary1 bg-[#ece8f2] flex justify-center items-center">
+                      <div className="h-14 w-14 rounded-full bg-[#ece8f2] flex justify-center items-center">
                         <FaPlus size={20} />
                       </div>
                       <input
                         type="file"
-                        id="uploadFile1"
+                        onChange={(e) => handleFileChange(e, setVideos)}
                         className="hidden"
                         accept="video/*"
-                        onChange={(e) => setVideos(e.target.files)}
                       />
                       <p className="mt-4 text-sm tracking-wide text-black/60 font-light">
                         {index === 0 ? "Primary" : "Secondary"}
@@ -221,7 +192,10 @@ const Page = ({ params }) => {
                 </div>
               </div>
               <div className="mt-6 flex justify-center">
-                <button type="submit" className="bg-primary1 text-white w-full ml-2 p-2 rounded hover:bg-primary1/80">
+                <button
+                  type="submit"
+                  className="bg-primary1 text-white w-full ml-2 p-2 rounded hover:bg-primary1/80"
+                >
                   Save Changes
                 </button>
               </div>

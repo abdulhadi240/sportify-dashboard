@@ -127,11 +127,11 @@ export const AllGames = async () => {
 
 
 export const SingleGame = async (id) => {
-  const data = await fetch(`https://sportify-1haq.onrender.com/game/get_court_games/${id}`, {
+  const data = await fetch(`https://sportify-1haq.onrender.com/game/get_game/${id}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${process.env.BEARER_TOKEN}`
+      'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`
     }
   });
 
@@ -142,7 +142,7 @@ export const SingleGame = async (id) => {
 
 // actions/UpdateCourt.js
 export const UpdateGame = async (id, name, category ,person , date , description) => {
-  const data = await fetch(`https://sportify-1haq.onrender.com/court/update_game/${id}`, {
+  const data = await fetch(`https://sportify-1haq.onrender.com/game/update_game/${id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -150,6 +150,9 @@ export const UpdateGame = async (id, name, category ,person , date , description
     },
     body: JSON.stringify({
       name: name,
+      description: description,
+      category: category,  // Pass court_location correctly
+      person: person,        // Pass hourly_rate correctly
     }),
   });
 
@@ -174,3 +177,26 @@ export const GetAllUser = async () => {
   console.log(res);  // Log the response for debugging purposes
   return res;
 };
+
+
+export const CreateGame = async (name , category , person , date , description) => {
+  const data = await fetch(`https://sportify-1haq.onrender.com/game/create_game`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`
+    },
+    body: JSON.stringify({
+      name: name,
+      description: description,
+      category: category,  // Pass court_location correctly
+      person: person,        // Pass hourly_rate correctly
+    }),
+  });  
+  
+  const res = await data.json()
+  console.log(res);
+  
+  return res
+ 
+}

@@ -8,7 +8,7 @@ import {
 import Link from 'next/link';
 import { FiEdit } from 'react-icons/fi';
 import { MdDelete } from 'react-icons/md';
-import { AllGames, Courts, DeleteCourt, DeleteGame } from '@/actions/Grounds';
+import { AllGames, DeleteGame } from '@/actions/Grounds';
 import {Skeleton} from '@/components/ui/skeleton';
 
 
@@ -28,7 +28,7 @@ const   BodyGames = () => {
 
   const HandleDelete = async (id) => {
     await DeleteGame(id)
-    const response = await Courts();
+    const response = await AllGames();
     setData(response);
     setLoading(false);
   }

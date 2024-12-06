@@ -66,7 +66,7 @@ const   BodyGames = () => {
     <TableBody>
       {data.map((booking,index) => (
         <TableRow key={booking.id} className='hover:bg-[#f4eef8]'>
-          <TableCell>{index|| ''}</TableCell>
+          <TableCell>{index+1}</TableCell>
           <TableCell>{booking.name || ''}</TableCell>
           <TableCell>{booking.category || ''}</TableCell>
           <TableCell>{booking.status || ''}</TableCell>

@@ -5,7 +5,7 @@ export const Courts = async () => {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${process.env.BEARER_TOKEN}`
+      'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`
     }
   });
   const data = await res.json();
@@ -19,7 +19,7 @@ export const SingleCourt = async (id) => {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${process.env.BEARER_TOKEN}`
+      'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`
     }
   });
 
@@ -99,7 +99,7 @@ export const SingleCourtImage = async (id) => {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${process.env.BEARER_TOKEN}`
+      'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`
     }
   });
 
@@ -116,7 +116,7 @@ export const AllGames = async () => {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${process.env.BEARER_TOKEN}`
+      'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`
     }
   });
 
@@ -199,7 +199,6 @@ export const DeleteGame = async (id) => {
   return res;
 };
 
-// actions/UpdateCourt.js
 export const GetAllUser = async () => {
   const data = await fetch(`https://sportify-1haq.onrender.com/admin/get_users`, {
     method: 'GET',
@@ -215,3 +214,62 @@ export const GetAllUser = async () => {
 };
 
 
+export const CreateUser = async (email,password,name,user_phone,secondary_user_phone) => {
+  const data = await fetch(`https://sportify-1haq.onrender.com/auth/signup`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`,
+    },
+    body: JSON.stringify({
+      email: email,
+      password: password,
+      name: name,  // Pass court_location correctly
+      user_phone: user_phone,        // Pass hourly_rate correctly
+      secondary_user_phone: secondary_user_phone,        // Pass hourly_rate correctly
+
+    }),
+  });
+
+  const res = await data.json();
+  console.log(res);  // Log the response for debugging purposes
+  return res;
+};
+
+export const UpdateUser = async (id,email,password,name,user_phone,secondary_user_phone) => {
+  const data = await fetch(`https://sportify-1haq.onrender.com/admin/update_user/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`,
+    },
+    body: JSON.stringify({
+      email: email,
+      password_hash: password,
+      name: name,  // Pass court_location correctly
+      user_phone: user_phone,        // Pass hourly_rate correctly
+      secondary_user_phone: secondary_user_phone,        // Pass hourly_rate correctly
+
+    }),
+  });
+
+  const res = await data.json();
+  console.log(res);  // Log the response for debugging purposes
+  return res;
+};
+
+
+export const DeleteUser = async (id) => {
+  const data = await fetch(`https://sportify-1haq.onrender.com/admin/delete_user/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`,
+    },
+    
+  });
+
+  const res = await data.json();
+  console.log(res);  // Log the response for debugging purposes
+  return res;
+};

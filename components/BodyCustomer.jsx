@@ -11,6 +11,7 @@ import { MdDelete } from 'react-icons/md';
 import {GetAllUser } from '@/actions/Grounds';
 import {Skeleton} from '@/components/ui/skeleton';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { DeleteUser } from '../actions/Grounds';
 
 
 
@@ -29,8 +30,8 @@ const BodyCustomer = () => {
 
 
   const HandleDelete = async (id) => {
-    await DeleteCourt(id)
-    const response = await Courts();
+    await DeleteUser(id)
+    const response = await GetAllUser();
     setData(response);
     setLoading(false);
   }
@@ -60,6 +61,14 @@ const BodyCustomer = () => {
     return `${day} ${month} ${year}`;
   }
 
+  const getInitials = (name) => {
+    if (!name) return '';
+    const nameParts = name.split(' ');
+    const initials = nameParts.map(part => part.charAt(0)).join('');
+    return initials;
+  };
+  
+
   if (loading) {
     return <Skeleton />;
   }
@@ -74,8 +83,7 @@ const BodyCustomer = () => {
           <TableCell>{booking.secondary_user_phone || '+92-3334-567891'}</TableCell>
           <TableCell>
           <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" alt="User" />
-            <AvatarFallback>MR</AvatarFallback>
+            <AvatarFallback className='bg-primary1 text-white'>{getInitials(booking.name)}</AvatarFallback>
           </Avatar>
           </TableCell>
           <TableCell>{formatDate(booking.created_at) || '04 sep 2024'}</TableCell>

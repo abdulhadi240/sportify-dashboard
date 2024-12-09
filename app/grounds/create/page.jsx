@@ -1,12 +1,13 @@
 'use client'
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { MdArrowBackIos } from "react-icons/md";
 import { toast } from "react-toastify";
-import { CreateCourt } from "../../../actions/Grounds"; // Ensure this path matches your project structure
+import { AllGames, CreateCourt } from "../../../actions/Grounds"; // Ensure this path matches your project structure
 import { useRouter } from "next/navigation";
 const Page = () => {
+
   const [name, setName] = useState("");
   const [type, setType] = useState("Multi Ground");
   const [game, setGame] = useState("Futsal");
@@ -15,7 +16,18 @@ const Page = () => {
   const [description, setDescription] = useState("");
   const [images, setImages] = useState([]);
   const [videos, setVideos] = useState([]);
+  const [allgames , setAllGames] = useState([]);
 
+
+  useEffect(()=>{
+    const fetchGame = async () => {
+      const games = await AllGames();
+      setGame(games[0].name);
+      setAllGames(games);
+      console.log(games);
+    }
+    fetchGame()
+  },[])
 
   const router = useRouter()
   // Handles the form submission
@@ -82,6 +94,8 @@ const Page = () => {
                     className="w-full mt-1 p-2 text-sm bg-[#f9f9fb] border-gray-300 rounded"
                   >
                     <option>Multi Ground</option>
+                    <option>Indoor</option>
+                    <option>Outdoor</option>
                   </select>
                 </div>
               </div>
@@ -93,7 +107,10 @@ const Page = () => {
                     onChange={(e) => setGame(e.target.value)}
                     className="w-full mt-1 p-2 text-sm bg-[#f9f9fb] border-gray-300 rounded"
                   >
-                    <option>Futsal</option>
+                  {allgames.map((data , index) => (
+                    <option key={index}>{data.name}</option>
+
+                  ))}
                   </select>
                 </div>
                 <div className="w-1/2 pr-2">

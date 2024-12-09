@@ -2,79 +2,62 @@
 
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
-import { FaPlus } from "react-icons/fa6";
+import { FaPlus, FaEye, FaEyeSlash } from "react-icons/fa";
 import { MdArrowBackIos } from "react-icons/md";
-import { SingleCourt } from "../../../actions/Grounds";
-import { UpdateCourt } from "../../../actions/Grounds";  // Import the UpdateCourt function
+import { GetAllUser, UpdateUser } from "../../../actions/Grounds";
 import { toast } from "react-toastify";
 import Skeleton from "@/components/Skeleton";
-
+import { useRouter } from "next/navigation";
 const Page = ({ params }) => {
   const [name, setName] = useState("");
-  const [courtLocation, setCourtLocation] = useState("");
-  const [hourlyRate, setHourlyRate] = useState(5000);
-  const [description, setDescription] = useState("");
-  const [gameType, setGameType] = useState("Futsal");
-  const [courtType, setCourtType] = useState("Multi Ground");
-  const [images, setImages] = useState([]);
-  const [videos, setVideos] = useState([]);
-  const [loading, setLoading] = useState(true); // To handle loading state
-  const [courtId, setCourtId] = useState(null);  // To store the court ID for updating
-
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [user_phone, setUser_Phone] = useState("");
+  const [secondary_user_phone, setSecondary_User_Phone] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
+const router = useRouter();
   useEffect(() => {
-    const fetchCourtData = async () => {
-      const data = await SingleCourt(params.ground);
-      setName(data.name || "");
-      setCourtLocation(data.court_location || "");
-      setHourlyRate(data.hourly_rate || 5000);
-      setDescription(data.description || "");
-      setCourtId(data.id); // Set the court ID for future updates
+    const fetchUserData = async () => {
+      const data = await GetAllUser();
+      const user = data.find((user) => user.id === params.customer);
+   
+      
+      setName(user?.name || "");
+      setEmail(user.email || "");
+      setPassword(user.password_hash || '');
+      setUser_Phone(user.user_phone || "");
+      setSecondary_User_Phone(user.secondary_user_phone || "");
       setLoading(false); // Set loading to false after data is fetched
     };
 
-    fetchCourtData();
+    fetchUserData();
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    let parsedHourlyRate = parseFloat(hourlyRate);  
-    if (isNaN(parsedHourlyRate)) {
-      alert("Invalid hourly rate. Please provide a valid number.");
-      return;
-    }
   
-    if (!courtId) {
-      alert("Court ID is missing, cannot update.");
-      return;
-    }
-  
-    if (!courtLocation || typeof courtLocation !== 'string') {
-      alert("Court location is required and must be a valid string.");
-      return;
-    }
-  
-    const minDownPayment = 100;
-  
-    console.log({
-      name: name,
-      description: description,
-      court_location: courtLocation,
-      hourly_rate: parsedHourlyRate,
-      min_down_payment: minDownPayment
-    });
-  
-    const updatedData = await UpdateCourt(
-      courtId,
+
+    console.log(
       name,
-      description,
-      courtLocation,
-      parsedHourlyRate,  // Ensure the value passed is parsed
-      minDownPayment
+      email,
+      password,
+      user_phone,  // Ensure the value passed is parsed
+      secondary_user_phone
+    );
+    
+    const updatedData = await UpdateUser(
+      params.customer,
+      email,
+      password,
+      name,
+      user_phone,  // Ensure the value passed is parsed
+      secondary_user_phone
     );
   
     if (!updatedData.statusCode) {
       toast.success("Court updated successfully.");
+      router.push("/customers");
     } else {
       toast.error("Failed to update the court.");
     }
@@ -86,145 +69,101 @@ const Page = ({ params }) => {
 
   return (
     <div>
-      <div className="min-h-screen w-full flex justify-center items-center">
+      <div className="w-full flex justify-center items-center">
         <div className="bg-white rounded-lg md:p-0 p-2 w-full max-w-6xl">
           <div className="flex items-center mb-4 gap-3">
             <Link href="/grounds" className="h-8 w-8 flex justify-center items-center pl-1 rounded-full bg-[#f9f9fb] text-primary1">
               <MdArrowBackIos size={15} />
             </Link>
             <h1 className="text-xl">
-              Grounds / <span className="font-light">Edit Ground</span>
+              Customers / <span className="font-light">Edit Customer</span>
             </h1>
           </div>
-          <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <form
+            onSubmit={handleSubmit}
+            className="grid grid-cols-1 md:grid-cols-2 gap-10"
+          >
             {/* Left Column */}
             <div className="space-y-4">
-              <div>
-                <div className="flex justify-between">
-                  <div className="w-1/2 pr-2">
-                    <label className="block text-sm">Name</label>
-                    <input
-                      type="text"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      placeholder="Enter ground name"
-                      className="w-full mt-1 p-2 text-sm bg-[#f9f9fb] border-gray-300 rounded"
-                    />
-                  </div>
-                  <div className="w-1/2 pl-2">
-                    <label className="block text-sm">Select Type</label>
-                    <select
-                      className="w-full mt-1 p-2 text-sm bg-[#f9f9fb] border-gray-300 rounded"
-                      value={courtType}
-                      onChange={(e) => setCourtType(e.target.value)}
-                    >
-                      <option>Multi Ground</option>
-                    </select>
-                  </div>
+              <div className="flex justify-between">
+                <div className="w-1/2 pr-2">
+                  <label className="block text-sm">Name</label>
+                  <input
+                    type="text"
+                    placeholder="Enter Name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-56 mt-1 p-2 text-sm bg-[#f9f9fb] border-gray-300 rounded"
+                  />
+                </div>
+                <div className="w-1/2 pl-2">
+                  <label className="block text-sm">Email</label>
+                  <input
+                    type="email"
+                    placeholder="Enter Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-56 mt-1 p-2 text-sm bg-[#f9f9fb] border-gray-300 rounded"
+                  />
                 </div>
               </div>
               <div className="flex justify-between">
                 <div className="w-1/2 pr-2">
-                  <label className="block text-sm">Select Games</label>
-                  <select
-                    className="w-full mt-1 p-2 text-sm bg-[#f9f9fb] border-gray-300 rounded"
-                    value={gameType}
-                    onChange={(e) => setGameType(e.target.value)}
-                  >
-                    <option>Futsal</option>
-                  </select>
-                </div>
-                <div className="w-1/2 pr-2">
-                  <label className="block text-sm">Location</label>
+                  <label className="block text-sm">Phone Number</label>
                   <input
                     type="text"
-                    value={courtLocation}
-                    onChange={(e) => setCourtLocation(e.target.value)}
-                    placeholder="Location"
-                    className="w-full mt-1 p-2 text-sm bg-[#f9f9fb] border-gray-300 rounded"
+                    placeholder="Enter your phone number"
+                    value={user_phone}
+                    onChange={(e) => setUser_Phone(e.target.value)}
+                    className="w-56 mt-1 p-2 text-sm bg-[#f9f9fb] border-gray-300 rounded"
+                  />
+                </div>
+                <div className="w-1/2 pr-2">
+                  <label className="block text-sm">Second Phone Number</label>
+                  <input
+                    type="text"
+                    placeholder="03120202881"
+                    value={secondary_user_phone}
+                    onChange={(e) => setSecondary_User_Phone(e.target.value)}
+                    className="w-56 mt-1 p-2 text-sm bg-[#f9f9fb] border-gray-300 rounded"
                   />
                 </div>
               </div>
-              <div>
-                <label className="block text-sm">Amount</label>
+              <label className="block text-sm">Password</label>
+              <div className="relative">
                 <input
-                  type="number"
-                  value={hourlyRate}
-                  onChange={(e) => setHourlyRate(e.target.value)}
-                  placeholder="Rs: 5000"
-                  className="w-full mt-1 p-2 border bg-[#f9f9fb] text-sm border-gray-300 rounded"
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="********"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full mt-1 p-2  pr-8 border bg-[#f9f9fb] text-sm border-gray-300 rounded"
                 />
-              </div>
-              <div>
-                <label className="block text-sm">Description</label>
-                <textarea
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Description"
-                  className="w-full mt-1 p-2 border text-sm bg-[#f9f9fb] border-gray-300 rounded h-20"
-                ></textarea>
+                <div
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </div>
               </div>
             </div>
-
-            {/* Right Column */}
-            <div className="space-y-6">
-              <div>
-                <label className="block text-lg ml-3">Add Images</label>
-                <div className="flex flex-wrap gap-2 mt-2 justify-center">
-                  {[...Array(4)].map((_, index) => (
-                    <label
-                      key={index}
-                      htmlFor="uploadFile1"
-                      className="bg-[#f9f9fb] font-semibold text-base rounded max-w-md h-52 w-52 flex flex-col items-center justify-center cursor-pointer border bg-[#f9f9fb]-[1px] border-gray-300 font-[sans-serif]"
-                    >
-                      <div className="h-14 w-14 rounded-full text-primary1 bg-[#ece8f2] flex justify-center items-center">
-                        <FaPlus size={20} />
-                      </div>
-                      <input
-                        type="file"
-                        id="uploadFile1"
-                        className="hidden"
-                        accept="image/*"
-                        onChange={(e) => setImages(e.target.files)}
-                      />
-                      <p className="mt-4 text-sm tracking-wide text-black/60 font-light">
-                        {index === 0 ? "Primary" : "Secondary"}
-                      </p>
-                    </label>
-                  ))}
+            <div>
+              <label className="bg-[#f9f9fb] font-semibold text-base rounded max-w-md h-56 w-52 flex flex-col items-center justify-center cursor-pointer border border-gray-300">
+                <div className="h-14 w-14 rounded-full bg-[#ece8f2] flex justify-center items-center">
+                  <FaPlus size={20} />
                 </div>
-              </div>
-              <div>
-                <label className="block text-lg">Add Videos</label>
-                <div className="flex flex-wrap gap-2 mt-2 justify-center">
-                  {[...Array(2)].map((_, index) => (
-                    <label
-                      key={index}
-                      htmlFor="uploadFile1"
-                      className="bg-[#f9f9fb] font-semibold text-base rounded max-w-md h-52 w-52 flex flex-col items-center justify-center cursor-pointer border bg-[#f9f9fb]-[1px] border-gray-300 font-[sans-serif]"
-                    >
-                      <div className="h-14 w-14 rounded-full text-primary1 bg-[#ece8f2] flex justify-center items-center">
-                        <FaPlus size={20} />
-                      </div>
-                      <input
-                        type="file"
-                        id="uploadFile1"
-                        className="hidden"
-                        accept="video/*"
-                        onChange={(e) => setVideos(e.target.files)}
-                      />
-                      <p className="mt-4 text-sm tracking-wide text-black/60 font-light">
-                        {index === 0 ? "Primary" : "Secondary"}
-                      </p>
-                    </label>
-                  ))}
-                </div>
-              </div>
-              <div className="mt-6 flex justify-center">
-                <button type="submit" className="bg-primary1 text-white w-full ml-2 p-2 rounded hover:bg-primary1/80">
-                  Save Changes
-                </button>
-              </div>
+                <input type="file" className="hidden" accept="image/*" />
+                <p className="mt-4 text-sm tracking-wide text-black/60 font-light">
+                  {"Profile Image"}
+                </p>
+              </label>
+            </div>
+            <div className="flex justify-start">
+              <button
+                type="submit"
+                className="bg-primary1 text-white w-auto ml-2 px-10 p-2 rounded hover:bg-primary1/80"
+              >
+                Save Changes
+              </button>
             </div>
           </form>
         </div>

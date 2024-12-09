@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { CreateCourt } from "../../../actions/Grounds"; // Ensure this path matches your project structure
+import { CreateUser } from "../../../actions/Grounds"; // Ensure this path matches your project structure
 import { useRouter } from "next/navigation";
 import { FaPlus } from "react-icons/fa6";
 
@@ -16,29 +16,23 @@ const Page = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!name || !location || !amount || !description) {
+    if (!name || !email || !password || !user_phone || !secondary_user_phone) {
       toast.error("Please fill all required fields.");
       return;
     }
 
-    let parsedHourlyRate = parseFloat(amount);
-    if (isNaN(parsedHourlyRate)) {
-      alert("Invalid hourly rate. Please provide a valid number.");
-      return;
-    }
-
-    const result = await CreateCourt(
+    const result = await CreateUser(
+      email,
+      password,
       name,
-      description,
-      location,
-      parsedHourlyRate,
-      100
+      user_phone,
+      secondary_user_phone
     );
     if (!result.success) {
-      toast.success("Court created successfully!");
-      router.push("/grounds");
+      toast.success("User created successfully!");
+      router.push("/customers");
     } else {
-      toast.error(`Failed to create court: ${result.error}`);
+      toast.error(`Failed to create a User: ${result.error}`);
     }
   };
 

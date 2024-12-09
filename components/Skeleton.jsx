@@ -7,8 +7,8 @@ const Skeleton = () => {
         {/* Header Section */}
         <div className="flex items-center mb-6">
           <div className="h-10 w-10  bg-[#f9f9fb] rounded-full animate-pulse"></div>
-          <h1 className="ml-4 text-xl font-semibold text-gray-400">
-            Grounds / <span className="font-light">Edit Ground</span>
+          <h1 className="ml-4 text-xl font-semibold animate-pulse bg-[#f9f9fb]  text-gray-400">
+          {" "} / <span className="font-light animate-pulse bg-[#f9f9fb]">{" "}</span>
           </h1>
         </div>
 

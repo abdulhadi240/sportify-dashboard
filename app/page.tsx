@@ -1,3 +1,4 @@
+'use client'
 import { Card } from "@/components/ui/card";
 import {
   Table,
@@ -9,27 +10,40 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
+import { Dashbaord } from "@/actions/Grounds";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import * as React from "react"
+import { addDays, format } from "date-fns"
+import { Calendar as CalendarIcon } from "lucide-react"
+import { DateRange } from "react-day-picker"
+
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+
 
 const stats = [
   {
     title: "Total Booking",
     value: "22,880",
-    percentage: "67%",
   },
   {
     title: "Total Sales",
     value: "22,880",
-    percentage: "67%",
   },
   {
     title: "Total Support",
     value: "22,880",
-    percentage: "67%",
   },
   {
     title: "Marketing Amount",
     value: "22,880",
-    percentage: "67%",
   },
 ];
 
@@ -51,7 +65,7 @@ const bookings = [
     status: "On Hold",
   },
   {
-    id: "00001",
+    id: "00003",
     name: "Brroks",
     address: "089 Kutch Green Apt 428",
     date: "04 Sep 2024",
@@ -62,17 +76,95 @@ const bookings = [
 ];
 
 export default function DashboardPage() {
+  const getCurrentDateTime = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+  
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+  };
+
+  const [date, setDate] = useState({
+    from: new Date(2024, 10, 20), // Adjust starting date if needed
+    to: new Date(), // Current date and time
+  });
+
+  const [start, setStart] = useState(format(date.from, "yyyy-MM-dd'T'HH:mm:ss"));
+  const [end, setEnd] = useState(format(date.to, "yyyy-MM-dd'T'HH:mm:ss"));
+  const [data , setData] = useState([])
+
+  useEffect(() => {
+    async function getStats() {
+      const stat = await Dashbaord(start, end);
+      setData(stat);
+    }
+    getStats();
+  }, [start, end]);
+
+
+  useEffect(() => {
+    // Update start and end dates whenever the range changes
+    setStart(format(date.from, "yyyy-MM-dd'T'HH:mm:ss"));
+    setEnd(format(date.to, "yyyy-MM-dd'T'HH:mm:ss"));
+  }, [date]);
+  
+
   return (
     <div className="space-y-8">
+      <div className="flex justify-between">
       <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
-      
+      <div>
+      <div className={cn("grid gap-2")}>
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button
+            id="date"
+            variant={"outline"}
+            className={cn(
+              "w-[250px] justify-start gap-2 text-left font-normal",
+              !date && "text-muted-foreground"
+            )}
+          >
+            <CalendarIcon size={16}/>
+            {date?.from ? (
+              date.to ? (
+                <>
+                  {format(date.from, "LLL dd, y")} -{" "}
+                  {format(date.to, "LLL dd, y")}
+                </>
+              ) : (
+                format(date.from, "LLL dd, y")
+              )
+            ) : (
+              <span>Pick a date</span>
+            )}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-0" align="start">
+          <Calendar
+            initialFocus
+            mode="range"
+            defaultMonth={date?.from}
+            selected={date}
+            onSelect={setDate}
+            numberOfMonths={2}
+          />
+        </PopoverContent>
+      </Popover>
+    </div>
+      </div>
+      </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {stats.map((stat) => (
-          <Card key={stat.title} className="p-6 bg-[#f4eef8]">
+        
+          <Card  className="p-6 bg-[#f4eef8]">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-2xl font-bold mt-2">{stat.value}</h3>
-                <p className="text-sm text-muted-foreground">{stat.title}</p>
+                <h3 className="text-2xl font-bold mt-2">{data?.total_bookings_count}</h3>
+                <p className="text-sm text-muted-foreground">Total Booking</p>
 
               </div>
               <div className="bg-white rounded-full h-10 p-1 w-10">
@@ -80,7 +172,44 @@ export default function DashboardPage() {
               </div>
             </div>
           </Card>
-        ))}
+          <Card  className="p-6 bg-[#f4eef8]">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-2xl font-bold mt-2">{data?.total_users}</h3>
+                <p className="text-sm text-muted-foreground">Total Users</p>
+
+              </div>
+              <div className="bg-white rounded-full h-10 p-1 w-10">
+              <Image src={'https://res.cloudinary.com/dfkn6xcg4/image/upload/v1733224058/path_2_ykmrg7.png'} width={30} height={30} alt="path"/>
+              </div>
+            </div>
+          </Card>
+          <Card  className="p-6 bg-[#f4eef8]">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-2xl font-bold mt-2">{data?.total_amount}</h3>
+                <p className="text-sm text-muted-foreground">Total Amount</p>
+
+              </div>
+              <div className="bg-white rounded-full h-10 p-1 w-10">
+              <Image src={'https://res.cloudinary.com/dfkn6xcg4/image/upload/v1733224058/path_2_ykmrg7.png'} width={30} height={30} alt="path"/>
+              </div>
+            </div>
+          </Card>
+          <Card  className="p-6 bg-[#f4eef8]">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-2xl font-bold mt-2">{data?.total_paid_amount}</h3>
+                <p className="text-sm text-muted-foreground">Total Paid</p>
+
+              </div>
+              <div className="bg-white rounded-full h-10 p-1 w-10">
+              <Image src={'https://res.cloudinary.com/dfkn6xcg4/image/upload/v1733224058/path_2_ykmrg7.png'} width={30} height={30} alt="path"/>
+              </div>
+            </div>
+          </Card>
+          
+        
       </div>
 
       <Card>

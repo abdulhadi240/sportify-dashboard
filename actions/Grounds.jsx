@@ -273,3 +273,22 @@ export const DeleteUser = async (id) => {
   console.log(res);  // Log the response for debugging purposes
   return res;
 };
+
+export const Dashbaord = async (start_time,end_time) => {
+  const data = await fetch(`https://sportify-1haq.onrender.com/admin/dashboard`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`,
+    },
+    body: JSON.stringify({
+      start_time:start_time,
+      end_time:end_time
+    }),
+  });
+
+  const res = await data.json();
+  console.log(res);  // Log the response for debugging purposes
+  return res;
+};
+

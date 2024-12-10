@@ -76,18 +76,6 @@ const bookings = [
 ];
 
 export default function DashboardPage() {
-  const getCurrentDateTime = () => {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    const seconds = String(now.getSeconds()).padStart(2, '0');
-  
-    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
-  };
-
   const [date, setDate] = useState({
     from: new Date(2024, 10, 20), // Adjust starting date if needed
     to: new Date(), // Current date and time
@@ -150,7 +138,15 @@ export default function DashboardPage() {
             mode="range"
             defaultMonth={date?.from}
             selected={date}
-            onSelect={setDate}
+            onSelect={(range) => {
+              if (range) {
+                // Update the state with the new range
+                setDate({
+                  from: range.from || date.from, // Retain existing 'from' if not selected
+                  to: range.to || null,         // Allow partial range selection
+                });
+              }
+            }}        
             numberOfMonths={2}
           />
         </PopoverContent>

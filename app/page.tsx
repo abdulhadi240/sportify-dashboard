@@ -103,8 +103,8 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-8">
-      <div className="flex justify-between">
-      <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+      <div className="flex items-center justify-between gap-4 sm:gap-0">
+      <h2 className="md:text-3xl text-lg  font-bold tracking-tight">Dashboard</h2>
       <div>
       <div className={cn("grid gap-2")}>
       <Popover>
@@ -113,17 +113,19 @@ export default function DashboardPage() {
             id="date"
             variant={"outline"}
             className={cn(
-              "w-[250px] justify-start gap-2 text-left font-normal",
+              "md:w-[250px] w-full justify-start gap-2 text-left font-normal",
               !date && "text-muted-foreground"
             )}
           >
+            <div className="hidden sm:block">
             <CalendarIcon size={16}/>
+            </div>
             {date?.from ? (
               date.to ? (
-                <>
+                <div className="text-xs sm:text-base">
                   {format(date.from, "LLL dd, y")} -{" "}
                   {format(date.to, "LLL dd, y")}
-                </>
+                </div>
               ) : (
                 format(date.from, "LLL dd, y")
               )
@@ -143,7 +145,7 @@ export default function DashboardPage() {
                 // Update the state with the new range
                 setDate({
                   from: range.from || date.from, // Retain existing 'from' if not selected
-                  to: range.to || null,         // Allow partial range selection
+                  to: range.to || date.to,         // Allow partial range selection
                 });
               }
             }}        

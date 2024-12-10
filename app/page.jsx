@@ -28,25 +28,6 @@ import {
 } from "@/components/ui/popover"
 
 
-const stats = [
-  {
-    title: "Total Booking",
-    value: "22,880",
-  },
-  {
-    title: "Total Sales",
-    value: "22,880",
-  },
-  {
-    title: "Total Support",
-    value: "22,880",
-  },
-  {
-    title: "Marketing Amount",
-    value: "22,880",
-  },
-];
-
 const bookings = [
   {
     id: "00001",
@@ -77,13 +58,13 @@ const bookings = [
 
 export default function DashboardPage() {
   const [date, setDate] = useState({
-    from: new Date(2024, 10, 20), // Adjust starting date if needed
-    to: new Date(), // Current date and time
+    from:  new Date(2024, 10, 20), // Adjust starting date if needed
+    to:  new Date(), // Current date and time
   });
 
   const [start, setStart] = useState(format(date.from, "yyyy-MM-dd'T'HH:mm:ss"));
   const [end, setEnd] = useState(format(date.to, "yyyy-MM-dd'T'HH:mm:ss"));
-  const [data , setData] = useState([])
+  const [data , setData] = useState(null)
 
   useEffect(() => {
     async function getStats() {

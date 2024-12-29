@@ -1,14 +1,14 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import { IoDownloadOutline } from "react-icons/io5";
-import { Courts } from "@/actions/Grounds";
+import { get_all_bookings } from "@/actions/Grounds";
 import * as XLSX from "xlsx";
 
-const Export =  () => {
+const Export_Booking =  () => {
 const [res , setRes] = useState([])
     useEffect(()=>{
         const fetchData = async () => {
-            const data = await Courts()
+            const data = await get_all_bookings()
             setRes(data)
             console.log(data)
         }
@@ -19,14 +19,15 @@ const [res , setRes] = useState([])
   const exportToExcel = () => {
     // Convert the list of items into an array of arrays for the Excel sheet
     const wsData = [
-      ["ID", "NAME", "GAME", "LOCATION", "AMOUNT", "CREATED AT", ""], // Column headers
+      ["ID", "STATUS", "CUSTOMER", "DATE", "SLOT", "PAID", "OVERDUE"], // Column headers
       ...res.map((item) => [
-        item.court_id,
-        item.name,
-        item.game,
-        item.court_location,
-        item.hourly_rate,
-        item.created_at,
+        item?.booking_id,
+        item?.status,
+        item?.user?.name,
+        item?.created_at,
+        `${item?.slot?.start_time} to ${item?.slot?.end_time}`,
+        item?.paid_amount,
+        item?.total_amount,
       ]), // Data rows
     ];
 
@@ -42,11 +43,11 @@ const [res , setRes] = useState([])
 
   
   return (
-    <button onClick={exportToExcel} className="md:px-6 px-3 bg-primary1 text-white rounded-lg flex items-center justify-center gap-2">
+    <button onClick={exportToExcel} className="px-6 py-2 bg-primary1 text-white rounded-lg flex items-center justify-center gap-2">
             <IoDownloadOutline />
             <span className="hidden md:block">Export</span>
           </button>
   )
 }
 
-export default Export
+export default Export_Booking

@@ -274,6 +274,41 @@ export const DeleteUser = async (id) => {
   return res;
 };
 
+export const Dashbaord1 = async (start_time,end_time) => {
+  const data = await fetch(`https://sportify-1haq.onrender.com/admin/dashboard`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`,
+    },
+    body: JSON.stringify({
+      start_time:start_time,
+      end_time:end_time
+    }),
+  });
+
+  const res = await data.json();
+  console.log(res);  // Log the response for debugging purposes
+  return res;
+};
+
+
+export const GetAllReviews = async () => {
+  const data = await fetch(`https://sportify-1haq.onrender.com/review/getall`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`,
+    },
+  });
+
+  const res = await data.json();
+  console.log(res);  // Log the response for debugging purposes
+  return res;
+};
+
+
+
 export const Dashbaord = async (start_time,end_time) => {
   const data = await fetch(`https://sportify-1haq.onrender.com/admin/dashboard`, {
     method: 'POST',
@@ -292,3 +327,19 @@ export const Dashbaord = async (start_time,end_time) => {
   return res;
 };
 
+
+
+
+export const get_all_bookings = async () =>{
+  const data = await fetch(`https://sportify-1haq.onrender.com/booking/get_all_bookings`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`,
+    },
+  });
+
+  const res = await data.json();
+  console.log(res);  // Log the response for debugging purposes
+  return res;
+}

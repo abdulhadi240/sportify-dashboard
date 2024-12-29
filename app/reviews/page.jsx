@@ -10,10 +10,13 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import Export from "@/components/Export";
 import BodyReview from "../../components/BodyReview";
+import { GetAllReviews } from "@/actions/Grounds";
 
 export const experimental_ppr = true;
 
 export default async function Page() {
+
+  const data = await GetAllReviews();
   
   return (
     <div className="space-y-8">
@@ -43,7 +46,7 @@ export default async function Page() {
             </TableRow>
           </TableHeader>
           <Suspense fallback={<Skeleton />}>
-            <BodyReview/>
+            <BodyReview review={data}/>
           </Suspense>
         </Table>
       </div>

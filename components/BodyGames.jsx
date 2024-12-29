@@ -12,8 +12,8 @@ import { AllGames, DeleteGame } from '@/actions/Grounds';
 import {Skeleton} from '@/components/ui/skeleton';
 
 
-const   BodyGames = () => {
-  const [data, setData] = useState([]);
+const   BodyGames = ({games}) => {
+  const [data, setData] = useState(games);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

@@ -11,10 +11,13 @@ import {
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
 import Export from "@/components/Export";
+import { AllGames } from "@/actions/Grounds";
 
 export const experimental_ppr = true;
 
 export default async function Page() {
+
+  const response = await AllGames();
   
   return (
     <div className="space-y-8">
@@ -44,7 +47,7 @@ export default async function Page() {
             </TableRow>
           </TableHeader>
           <Suspense fallback={<Skeleton />}>
-            <BodyGames/>
+            <BodyGames games={response}/>
           </Suspense>
         </Table>
       </div>

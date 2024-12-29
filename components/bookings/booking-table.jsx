@@ -23,14 +23,16 @@ const bookings = [
   // Add more booking data as needed
 ];
 
-interface BookingTableProps {
-  status?: string;
-}
 
-export function BookingTable({ status }: BookingTableProps) {
+export function BookingTable({ status, data }) {
   const filteredBookings = status
-    ? bookings.filter((booking) => booking.status === status)
-    : bookings;
+    ? data.filter((booking) => booking.status === status)
+    : data;
+
+  // Sort bookings by booking_id in descending order
+  const sortedBookings = filteredBookings.sort(
+    (a, b) => b.booking_id - a.booking_id
+  );
 
   return (
     <Table>
@@ -39,16 +41,16 @@ export function BookingTable({ status }: BookingTableProps) {
           <TableHead>ID</TableHead>
           <TableHead>STATUS</TableHead>
           <TableHead>CUSTOMER</TableHead>
-          <TableHead>NOTES</TableHead>
           <TableHead>DATE</TableHead>
           <TableHead>TIME</TableHead>
-          <TableHead>PAYMENT</TableHead>
+          <TableHead>PAID</TableHead>       
+          <TableHead>OVERDUE</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {filteredBookings.map((booking) => (
+        {sortedBookings?.map((booking, index) => (
           <TableRow key={booking.id}>
-            <TableCell>{booking.id}</TableCell>
+            <TableCell>{booking.booking_id}</TableCell>
             <TableCell>
               <Badge
                 variant={
@@ -62,11 +64,11 @@ export function BookingTable({ status }: BookingTableProps) {
                 {booking.status}
               </Badge>
             </TableCell>
-            <TableCell>{booking.customer}</TableCell>
-            <TableCell>{booking.notes}</TableCell>
-            <TableCell>{booking.date}</TableCell>
-            <TableCell>{booking.time}</TableCell>
-            <TableCell>{booking.payment}</TableCell>
+            <TableCell>{booking?.user?.name}</TableCell>
+            <TableCell>{booking?.created_at}</TableCell>
+            <TableCell>{booking?.slot?.start_time} - {booking?.slot?.end_time}</TableCell>
+            <TableCell>{booking?.paid_amount}</TableCell>
+            <TableCell>{booking?.total_amount}</TableCell>
           </TableRow>
         ))}
       </TableBody>

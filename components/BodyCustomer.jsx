@@ -69,7 +69,7 @@ const BodyCustomer = ({ user }) => {
         method: 'POST',
         headers: {
           'accept': '*/*',
-          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0NTI2OTRjMS00ZjExLTRkY2ItYjUyMC1hNzMwNjk5ZjY4ZTEiLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsInJvbGVzIjpbInVzZXIiLCJhZG1pbiJdLCJpYXQiOjE3MzU0NTQwNjUsImV4cCI6MTczNjMxODA2NX0.ZTVHR0h5AHs815fBWfp61Z4MOReaWhgh1qqKrr3eGlk',
+          'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({

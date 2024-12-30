@@ -38,6 +38,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     async function getStats() {
+      const token = localStorage.getItem('token');
       if(!token){
         router.push('/login')
       }    

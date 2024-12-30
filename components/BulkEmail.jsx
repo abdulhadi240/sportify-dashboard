@@ -24,6 +24,8 @@ const BulkEmail = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleBulkSendEmail = async () => {
+    const token = localStorage.getItem('token');
+
     if (!emailSubject || !emailContent) {
       alert("Please fill in all fields before sending.");
       return;
@@ -35,7 +37,7 @@ const BulkEmail = () => {
         method: "POST",
         headers: {
           accept: "*/*",
-          Authorization: `Bearer ${process.env.ADMIN_TOKEN}`,
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({

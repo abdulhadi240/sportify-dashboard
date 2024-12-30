@@ -12,13 +12,14 @@ import { AllGames, DeleteGame } from '@/actions/Grounds';
 import {Skeleton} from '@/components/ui/skeleton';
 
 
-const   BodyGames = ({games}) => {
-  const [data, setData] = useState(games);
+const BodyGames = () => {
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
-      const response = await AllGames();
+      const token = localStorage.getItem('token');
+      const response = await AllGames(token);
       setData(response);
       setLoading(false);
     }

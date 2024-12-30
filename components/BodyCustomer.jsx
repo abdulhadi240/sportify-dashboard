@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/table';
 import Link from 'next/link';
 import { FiEdit } from 'react-icons/fi';
-import { MdDelete, MdMail } from 'react-icons/md';
+import { MdMail } from 'react-icons/md';
 import { GetAllUser } from '@/actions/Grounds';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -27,18 +27,20 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from 'react-toastify';
 
-const BodyCustomer = ({ user }) => {
-  const [data, setData] = useState(user || []);
+const BodyCustomer = () => {
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedUser, setSelectedUser] = useState(user.id);
+  const [selectedUser, setSelectedUser] = useState(data?.id);
   const [emailSubject, setEmailSubject] = useState('');
   const [emailContent, setEmailContent] = useState('');
   const [load, setLoad] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
+      const token = localStorage.getItem('token');
+
       try {
-        const response = await GetAllUser();
+        const response = await GetAllUser(token);
         setData(response);
         setLoading(false);
       } catch (error) {
@@ -59,6 +61,8 @@ const BodyCustomer = ({ user }) => {
   };
 
   const handleSendEmail = async () => {
+    const token = localStorage.getItem('token');
+
     if (!selectedUser || !emailSubject || !emailContent) {
       alert("Please fill in all fields before sending.");
       return;
@@ -69,7 +73,7 @@ const BodyCustomer = ({ user }) => {
         method: 'POST',
         headers: {
           'accept': '*/*',
-          'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({

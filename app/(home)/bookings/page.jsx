@@ -13,12 +13,13 @@ export default function BookingsPage() {
   const [idQuery, setIdQuery] = useState("");
   const [nameQuery, setNameQuery] = useState("");
   const [bookingData, setBookingData] = useState([]);
-  const token = localStorage.getItem('token')
+
+  
+  useEffect(() => {
+    const token = localStorage.getItem('token')
   if(!token){
     router.push('/login')
   }
-  useEffect(() => {
-
     const getData = async () => {
       const token = localStorage.getItem('token');
       const data = await get_all_bookings(token);

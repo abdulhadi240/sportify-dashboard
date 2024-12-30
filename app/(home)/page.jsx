@@ -31,9 +31,7 @@ export default function DashboardPage() {
     from:  new Date(2024, 10, 20), // Adjust starting date if needed
     to:  new Date(), // Current date and time
   });
-  const router = useRouter()
-  const token = localStorage.getItem('token')
- 
+  const router = useRouter() 
   const [start, setStart] = useState(format(date.from, "yyyy-MM-dd'T'HH:mm:ss"));
   const [end, setEnd] = useState(format(date.to, "yyyy-MM-dd'T'HH:mm:ss"));
   const [data , setData] = useState(null)

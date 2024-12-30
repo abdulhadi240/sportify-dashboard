@@ -33,16 +33,16 @@ export default function DashboardPage() {
   });
   const router = useRouter()
   const token = localStorage.getItem('token')
-  if(!token){
-    router.push('/login')
-  }
-
+ 
   const [start, setStart] = useState(format(date.from, "yyyy-MM-dd'T'HH:mm:ss"));
   const [end, setEnd] = useState(format(date.to, "yyyy-MM-dd'T'HH:mm:ss"));
   const [data , setData] = useState(null)
 
   useEffect(() => {
     async function getStats() {
+      if(!token){
+        router.push('/login')
+      }    
       const stat = await Dashbaord(start, end , token);
       setData(stat);
       console.log(stat);

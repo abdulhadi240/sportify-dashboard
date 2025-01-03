@@ -67,6 +67,15 @@ export default function DashboardPage() {
     setEnd(format(date.to, "yyyy-MM-dd'T'HH:mm:ss"));
   }, [date]);
 
+  const calculateDate = (isoString) => {
+    const date = new Date(isoString);
+    return date.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+  };
+
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between gap-4 sm:gap-0">
@@ -196,19 +205,19 @@ export default function DashboardPage() {
             <TableRow>
               <TableHead>ID</TableHead>
               <TableHead>NAME</TableHead>
-              <TableHead>ADDRESS</TableHead>
+              <TableHead>PHONE NUMBER</TableHead>
               <TableHead>DATE</TableHead>
-              <TableHead>TYPE</TableHead>
+              <TableHead>COURT</TableHead>
               <TableHead>STATUS</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {data?.total_bookings?.map((booking) => (
               <TableRow key={booking.id}>
-                <TableCell>{booking.id}</TableCell>
-                <TableCell>{booking.name}</TableCell>
-                <TableCell>{booking.address}</TableCell>
-                <TableCell>{booking.date}</TableCell>
+                <TableCell>{booking.booking_id}</TableCell>
+                <TableCell>{booking?.user?.name}</TableCell>
+                <TableCell>{booking?.user?.user_phone}</TableCell>
+                <TableCell>{calculateDate(booking?.slot?.start_time)}</TableCell>
                 <TableCell>{booking.type}</TableCell>
                 <TableCell>
                   {booking.status === 'Booked' ? (

@@ -23,22 +23,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body>
         <AuthProvider>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem={false}
-          storageKey="sportefy-theme"
-        >
-          <SidebarProvider>
-            <div className="flex h-screen overflow-hidden">
-              <div className="flex-1 overflow-y-auto">
-                <Suspense fallback={<Skeleton/>}>
-                <main className="p-6">{children}</main>
-                </Suspense>
-              </div>
-            </div>
-          </SidebarProvider>
-        </ThemeProvider>
+          <div>{children}</div>
         <ToastContainer />
         </AuthProvider>
       </body>

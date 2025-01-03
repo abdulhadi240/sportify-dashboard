@@ -32,7 +32,7 @@ export default function WelcomePage() {
         setLoading(true);
         await login(values.email, values.password);
         console.log("Logged in successfully");
-        setLoading(true);
+        setLoading(false);
       } catch (err) {
         setError("Invalid email or password");
       }

@@ -43,7 +43,7 @@ const BulkEmail = () => {
         body: JSON.stringify({
           subject: emailSubject,
           content: emailContent,
-          roles: ["admin"],
+          roles: ["user", "admin"],
         }),
       });
 

@@ -1,62 +1,68 @@
-'use client';
-import React, { useEffect, useState } from 'react';
-import {
-  TableBody,
-  TableCell,
-  TableRow,
-} from '@/components/ui/table';
-import Link from 'next/link';
-import { FiEdit } from 'react-icons/fi';
-import { MdDelete } from 'react-icons/md';
-import { Skeleton } from '@/components/ui/skeleton';
-import { GetAllReviews, DeleteReviews } from '@/actions/Grounds';
-import { useRouter } from 'next/navigation';
+"use client";
+import React, { useEffect, useState } from "react";
+import { TableBody, TableCell, TableRow } from "@/components/ui/table";
+import Link from "next/link";
+import { FiEdit } from "react-icons/fi";
+import { MdDelete } from "react-icons/md";
+import { Skeleton } from "@/components/ui/skeleton";
+import { GetAllReviews, DeleteReviews, UpdateReviews } from "@/actions/Grounds";
+import Loading from "./Loading";
 const BodyReview = () => {
   const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true); // Initially set loading to true
   const [editingId, setEditingId] = useState(null); // Track the review being edited
-  const [status, setStatus] = useState('');
-const router = useRouter();
+  const [status, setStatus] = useState(""); // Temporary state for status selection
+  const [saving, setSaving] = useState(false); // Track saving state
+
   useEffect(() => {
     async function fetchData() {
-      const token = localStorage.getItem('token');
-      const response = await GetAllReviews(token);
-      setData(response);
-      setLoading(false);
+      setLoading(true); // Start loading
+      const token = localStorage.getItem("token");
+      try {
+        const response = await GetAllReviews(token);
+        setData(response);
+        console.log(response);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false); // End loading
+      }
     }
     fetchData();
   }, []);
 
-  const HandleDelete = async (id) => {
-    const token = localStorage.getItem('token');
-    await DeleteReviews(id, token);
-    const response = await GetAllReviews(token);
-    setData(response);
-    setLoading(false);
+  const handleDelete = async (id) => {
+    setLoading(true); // Show loading
+    const token = localStorage.getItem("token");
+    try {
+      await DeleteReviews(id, token);
+      const response = await GetAllReviews(token); // Refresh the list
+      setData(response);
+    } catch (error) {
+      console.error("Error deleting review:", error);
+    } finally {
+      setLoading(false); // End loading
+    }
   };
 
-  const HandleStatusChange = async (id, newStatus) => {
-    const token = localStorage.getItem('token');
+  const handleSave = async (id, newStatus) => {
+    setSaving(true); // Show saving state
+    const token = localStorage.getItem("token");
     try {
-      const response = await fetch('https://sportify-1haq.onrender.com/review/changeStatus', {
-        method: 'POST',
-        headers: {
-          'accept': '*/*',
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          id: id,
-          status: newStatus,
-        }),
-      });
+      const response = await UpdateReviews(id, newStatus, token);
 
-      const data = await response.json();
-      if(status === 'approved') {
-        router.push('/reviews');
+      if (!response.ok) {
+        throw new Error("Failed to update status");
       }
-      } catch (error) {
-      console.error('Error:', error);
+
+      // Fetch updated reviews list
+      const updatedReviews = await GetAllReviews(token);
+      setData(updatedReviews);
+      setEditingId(null); // Exit editing mode
+    } catch (error) {
+      console.error("Error updating status:", error);
+    } finally {
+      setSaving(false); // Hide saving state
     }
   };
 
@@ -67,7 +73,7 @@ const router = useRouter();
   return (
     <TableBody>
       {data?.map((booking) => (
-        <TableRow key={booking.id} className='hover:bg-[#f4eef8]'>
+        <TableRow key={booking.id} className="hover:bg-[#f4eef8]">
           <TableCell>{booking.user.name}</TableCell>
           <TableCell>{booking.court.name}</TableCell>
           <TableCell>{booking.review_text}</TableCell>
@@ -81,11 +87,19 @@ const router = useRouter();
               >
                 <option value="approved">Approve</option>
                 <option value="rejected">Reject</option>
-                <option value="pendinqg">Pending</option>
+                <option value="pending">Pending</option>
               </select>
             ) : (
               <span
-                className={`p-2 rounded-lg px-3 ${booking.published === 'published' ? 'bg-[#c3e3e5] text-[#00b69b]' : booking.published === 'cancelled' ? 'bg-[#f0cccc] text-[#b60000]' : 'bg-[#f0f0f0] text-[#b6b6b6]'}`}
+                className={`p-2 rounded-lg px-3 ${
+                  booking.published === "approved"
+                    ? "bg-green-500 text-white"
+                    : booking.published === "rejected"
+                    ? "bg-red-500 text-white"
+                    : booking.published === "pending"
+                    ? "bg-primary1 text-white"
+                    : "bg-[#f0f0f0] text-[#b6b6b6]"
+                }`}
               >
                 {booking.published}
               </span>
@@ -94,28 +108,34 @@ const router = useRouter();
           <TableCell>
             <div className="flex gap-2">
               <button
+                onClick={() => {
+                  setEditingId(booking.id);
+                  setStatus(booking.published); // Pre-fill current status
+                }}
                 className="text-primary1 w-8 h-8 bg-[#f7edfa] flex justify-center items-center rounded-full"
               >
-                <FiEdit onClick={() => {
-                  setEditingId(booking.id);
-                  setStatus(booking.published); // Pre-select the current status
-                  
-                }} />
+                <FiEdit />
               </button>
               <button
-                onClick={() => HandleDelete(booking.id)}
+                onClick={() => handleDelete(booking.id)}
                 className="text-primary1 hover:cursor-pointer w-8 h-8 bg-[#f7edfa] flex justify-center items-center rounded-full"
               >
                 <MdDelete />
               </button>
             </div>
             {editingId === booking.id && (
-              <button
-                onClick={() => HandleStatusChange(booking.id, status)}
-                className="mt-2 text-white bg-primary1 px-4 py-2 rounded-lg"
-              >
-                Save
-              </button>
+              <div className="mt-2">
+                {saving ? (
+                  <Loading />
+                ) : (
+                  <button
+                    onClick={() => handleSave(booking.id, status)}
+                    className="text-white bg-primary1 px-4 py-2 rounded-lg"
+                  >
+                    Save
+                  </button>
+                )}
+              </div>
             )}
           </TableCell>
         </TableRow>

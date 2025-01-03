@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
-import Export from "@/components/Export";
+import Export_Games from "@/components/Export_Games";
 
 export const experimental_ppr = true;
 
@@ -19,7 +19,7 @@ export default async function Page() {
       <div className="flex justify-between">
         <h2 className="text-3xl font-bold tracking-tight">Games</h2>
         <div className="flex gap-3">
-          <Export/>
+          <Export_Games/>
           <Link
             href="/games/create"
             className="px-6 bg-primary1 text-white rounded-lg flex items-center justify-center gap-2"

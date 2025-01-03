@@ -28,8 +28,12 @@ const BodyGames = () => {
 
 
   const HandleDelete = async (id) => {
-    await DeleteGame(id)
-    const response = await AllGames();
+    const token = localStorage.getItem('token');
+    const res = await DeleteGame(id , token)
+    console.log(res);
+    
+    const response = await AllGames(token);
+    console.log(response);
     setData(response);
     setLoading(false);
   }
@@ -65,7 +69,7 @@ const BodyGames = () => {
 
   return (
     <TableBody>
-      {data.map((booking,index) => (
+      {data?.map((booking,index) => (
         <TableRow key={booking.id} className='hover:bg-[#f4eef8]'>
           <TableCell>{index+1}</TableCell>
           <TableCell>{booking.name || ''}</TableCell>

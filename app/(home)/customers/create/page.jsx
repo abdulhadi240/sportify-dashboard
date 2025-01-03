@@ -80,7 +80,7 @@ const Page = () => {
                 <div className="w-1/2 pr-2">
                   <label className="block text-sm">Phone Number</label>
                   <input
-                    type="password"
+                    type="text"
                     placeholder="Enter your phone number"
                     value={user_phone}
                     onChange={(e) => setUser_Phone(e.target.value)}

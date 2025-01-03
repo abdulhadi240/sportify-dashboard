@@ -10,6 +10,8 @@ import Skeleton from "@/components/Skeleton";
 import { useRouter } from "next/navigation";
 const Page = ({ params }) => {
   const { id } = params;
+  console.log(id);
+  
   const [id1, setId] = useState("");
   const [name, setName] = useState("");
   const [category, setCategory] = useState("outdoor");
@@ -32,13 +34,17 @@ const Page = ({ params }) => {
   useEffect(() => {
     const fetchCourtData = async () => {
       const token = localStorage.getItem('token');
+      if(token && id) {
       const data = await SingleGame(id , token);
-      setId(data.id);
-      setName(data.name);
-      setCategory(data.category);
-      setPerson(data.person);
-      setDate(data.description);
+      console.log(data);
+      
+      setId(data?.games?.id);
+      setName(data?.games?.name);
+      setCategory(data?.games?.category);
+      setPerson(data?.games?.person);
+      setDescription(data?.games?.description);
       setLoading(false);
+      }
     };
 
     fetchCourtData();
@@ -54,7 +60,6 @@ const Page = ({ params }) => {
       name,
       category || 'outdoor', // Ensure the value passed is parsed
       person,
-      date,  // Ensure the value passed is parsed
       description,
       token
     );

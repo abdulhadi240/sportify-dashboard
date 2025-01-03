@@ -1,7 +1,7 @@
 'use server'
 
 export const Courts = async (token) => {
-  const res = await fetch("https://sportify-1haq.onrender.com/court/get_courts", {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_Backend_URL}court/get_courts`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -15,7 +15,7 @@ export const Courts = async (token) => {
 
 
 export const SingleCourt = async (id,token) => {
-  const data = await fetch(`https://sportify-1haq.onrender.com/court/get_court_details/${id}`, {
+  const data = await fetch(`${process.env.NEXT_PUBLIC_Backend_URL}court/get_court_details/${id}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -30,7 +30,7 @@ export const SingleCourt = async (id,token) => {
 
 
 export const DeleteCourt = async (id,token) => {
-  const data = await fetch(`https://sportify-1haq.onrender.com/court/delete_court/${id}`, {
+  const data = await fetch(`${process.env.NEXT_PUBLIC_Backend_URL}court/delete_court/${id}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
@@ -44,7 +44,7 @@ export const DeleteCourt = async (id,token) => {
 
 
 export const CreateCourt = async (name , description , court_location , hourly_rate , min_down_payment,token) => {
-  const data = await fetch(`https://sportify-1haq.onrender.com/court/create_court`, {
+  const data = await fetch(`${process.env.NEXT_PUBLIC_Backend_URL}court/create_court`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -71,7 +71,7 @@ export const CreateCourt = async (name , description , court_location , hourly_r
 
 // actions/UpdateCourt.js
 export const UpdateCourt = async (id, name, description, courtLocation, hourlyRate, minDownPayment,token) => {
-  const data = await fetch(`https://sportify-1haq.onrender.com/court/update_court/${id}`, {
+  const data = await fetch(`${process.env.NEXT_PUBLIC_Backend_URL}court/update_court/${id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -95,7 +95,7 @@ export const UpdateCourt = async (id, name, description, courtLocation, hourlyRa
 
 
 export const SingleCourtImage = async (id,token) => {
-  const data = await fetch(`https://sportify-1haq.onrender.com/court/get_court_media/${id}`, {
+  const data = await fetch(`${process.env.NEXT_PUBLIC_Backend_URL}court/get_court_media/${id}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -112,7 +112,7 @@ export const SingleCourtImage = async (id,token) => {
 
 
 export const AllGames = async (token) => {
-  const data = await fetch(`https://sportify-1haq.onrender.com/game/get_games`, {
+  const data = await fetch(`${process.env.NEXT_PUBLIC_Backend_URL}game/get_games`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -127,7 +127,7 @@ export const AllGames = async (token) => {
 
 
 export const SingleGame = async (id,token) => {
-  const data = await fetch(`https://sportify-1haq.onrender.com/game/get_game/${id}`, {
+  const data = await fetch(`${process.env.NEXT_PUBLIC_Backend_URL}game/get_game/${id}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -141,8 +141,8 @@ export const SingleGame = async (id,token) => {
 }
 
 // actions/UpdateCourt.js
-export const UpdateGame = async (id, name, category ,person , date , description,token) => {
-  const data = await fetch(`https://sportify-1haq.onrender.com/game/update_game/${id}`, {
+export const UpdateGame = async (id,name,category,person,description,token) => {
+  const data = await fetch(`${process.env.NEXT_PUBLIC_Backend_URL}game/update_game/${id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -161,8 +161,8 @@ export const UpdateGame = async (id, name, category ,person , date , description
   return res;
 };
 
-export const CreateGame = async (name , category , person , date , description,token) => {
-  const data = await fetch(`https://sportify-1haq.onrender.com/game/create_game`, {
+export const CreateGame = async (name , category , person , description,token) => {
+  const data = await fetch(`${process.env.NEXT_PUBLIC_Backend_URL}game/create_game`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -185,7 +185,7 @@ export const CreateGame = async (name , category , person , date , description,t
 
 // actions/UpdateCourt.js
 export const DeleteGame = async (id,token) => {
-  const data = await fetch(`https://sportify-1haq.onrender.com/game/delete_game/${id}`, {
+  const data = await fetch(`${process.env.NEXT_PUBLIC_Backend_URL}game/delete_game/${id}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
@@ -200,7 +200,7 @@ export const DeleteGame = async (id,token) => {
 };
 
 export const GetAllUser = async (token) => {
-  const data = await fetch(`https://sportify-1haq.onrender.com/admin/get_users`, {
+  const data = await fetch(`${process.env.NEXT_PUBLIC_Backend_URL}admin/get_users`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -215,7 +215,7 @@ export const GetAllUser = async (token) => {
 
 
 export const CreateUser = async (email,password,name,user_phone,secondary_user_phone,token) => {
-  const data = await fetch(`https://sportify-1haq.onrender.com/auth/signup`, {
+  const data = await fetch(`${process.env.NEXT_PUBLIC_Backend_URL}auth/signup`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -237,7 +237,7 @@ export const CreateUser = async (email,password,name,user_phone,secondary_user_p
 };
 
 export const UpdateUser = async (id,email,password,name,user_phone,secondary_user_phone,token) => {
-  const data = await fetch(`https://sportify-1haq.onrender.com/admin/update_user/${id}`, {
+  const data = await fetch(`${process.env.NEXT_PUBLIC_Backend_URL}admin/update_user/${id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -260,7 +260,7 @@ export const UpdateUser = async (id,email,password,name,user_phone,secondary_use
 
 
 export const DeleteUser = async (id,token) => {
-  const data = await fetch(`https://sportify-1haq.onrender.com/admin/delete_user/${id}`, {
+  const data = await fetch(`${process.env.NEXT_PUBLIC_Backend_URL}admin/delete_user/${id}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
@@ -275,7 +275,7 @@ export const DeleteUser = async (id,token) => {
 };
 
 export const Dashbaord1 = async (start_time,end_time) => {
-  const data = await fetch(`https://sportify-1haq.onrender.com/admin/dashboard`, {
+  const data = await fetch(`${process.env.NEXT_PUBLIC_Backend_URL}admin/dashboard`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -294,7 +294,7 @@ export const Dashbaord1 = async (start_time,end_time) => {
 
 
 export const GetAllReviews = async (token) => {
-  const data = await fetch(`https://sportify-1haq.onrender.com/review/getall`, {
+  const data = await fetch(`${process.env.NEXT_PUBLIC_Backend_URL}review/getall`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -308,7 +308,7 @@ export const GetAllReviews = async (token) => {
 };
 
 export const DeleteReviews = async (id,token) => {
-  const data = await fetch(`https://sportify-1haq.onrender.com/review/delete`, {
+  const data = await fetch(`${process.env.NEXT_PUBLIC_Backend_URL}review/delete`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
@@ -320,14 +320,14 @@ export const DeleteReviews = async (id,token) => {
   });
 
   const res = await data.json();
-  console.log(res);  // Log the response for debugging purposes
+  console.log(res);  // Log the resp  onse for debugging purposes
   return res;
 };
 
 
 export const UpdateReviews = async (id,status,token) => {
-  const data = await fetch(`https://sportify-1haq.onrender.com/review/changeStatus`, {
-    method: 'DELETE',
+  const data = await fetch(`${process.env.NEXT_PUBLIC_Backend_URL}review/changeStatus`, {
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`,
@@ -345,7 +345,7 @@ export const UpdateReviews = async (id,status,token) => {
 
 
 export const Dashbaord = async (start_time,end_time,token) => {
-  const data = await fetch(`https://sportify-1haq.onrender.com/admin/dashboard`, {
+  const data = await fetch(`${process.env.NEXT_PUBLIC_Backend_URL}admin/dashboard`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -366,7 +366,7 @@ export const Dashbaord = async (start_time,end_time,token) => {
 
 
 export const get_all_bookings = async (token) =>{
-  const data = await fetch(`https://sportify-1haq.onrender.com/booking/get_all_bookings`, {
+  const data = await fetch(`${process.env.NEXT_PUBLIC_Backend_URL}booking/get_all_bookings`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

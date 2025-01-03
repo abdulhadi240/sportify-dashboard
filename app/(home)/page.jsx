@@ -48,7 +48,7 @@ export default function DashboardPage() {
 
   const [start, setStart] = useState(format(date.from, "yyyy-MM-dd'T'HH:mm:ss"));
   const [end, setEnd] = useState(format(date.to, "yyyy-MM-dd'T'HH:mm:ss"));
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
 
   useEffect(() => {
     if (token) {
@@ -203,7 +203,7 @@ export default function DashboardPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data?.total_bookings.map((booking) => (
+            {data?.total_bookings?.map((booking) => (
               <TableRow key={booking.id}>
                 <TableCell>{booking.id}</TableCell>
                 <TableCell>{booking.name}</TableCell>

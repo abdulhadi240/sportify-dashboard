@@ -1,14 +1,15 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import { IoDownloadOutline } from "react-icons/io5";
-import { Courts } from "@/actions/Grounds";
+import { GetAllReviews } from "@/actions/Grounds";
 import * as XLSX from "xlsx";
 
 const Export =  () => {
 const [res , setRes] = useState([])
     useEffect(()=>{
         const fetchData = async () => {
-            const data = await Courts()
+          const token = localStorage.getItem('token');
+            const data = await GetAllReviews(token)
             setRes(data)
             console.log(data)
         }
@@ -19,24 +20,24 @@ const [res , setRes] = useState([])
   const exportToExcel = () => {
     // Convert the list of items into an array of arrays for the Excel sheet
     const wsData = [
-      ["ID", "NAME", "GAME", "LOCATION", "AMOUNT", "CREATED AT", ""], // Column headers
+      ["ID", "CUSTOMER", "GROUND", "REVIEW", "RATING", "STATUS"], // Column headers
       ...res.map((item) => [
-        item.court_id,
-        item.name,
-        item.game,
-        item.court_location,
-        item.hourly_rate,
-        item.created_at,
+        item.id,
+        item?.user?.name,
+        item.court?.name,
+        item.review_text,
+        item.rating,
+        item.published,
       ]), // Data rows
     ];
 
     // Create a new workbook and add the worksheet with the data
     const ws = XLSX.utils.aoa_to_sheet(wsData);
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Items");
+    XLSX.utils.book_append_sheet(wb, ws, "Reviews");
 
     // Generate a download link for the Excel file
-    XLSX.writeFile(wb, "items.xlsx");
+    XLSX.writeFile(wb, "reviews.xlsx");
   };
 
 

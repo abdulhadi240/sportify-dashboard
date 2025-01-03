@@ -1,14 +1,15 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import { IoDownloadOutline } from "react-icons/io5";
-import { get_all_bookings } from "@/actions/Grounds";
+import { AllGames } from "@/actions/Grounds";
 import * as XLSX from "xlsx";
 
-const Export_Booking =  () => {
+const Export_Games =  () => {
 const [res , setRes] = useState([])
     useEffect(()=>{
+        const token = localStorage.getItem('token');
         const fetchData = async () => {
-            const data = await get_all_bookings()
+            const data = await AllGames(token)
             setRes(data)
             console.log(data)
         }
@@ -19,15 +20,13 @@ const [res , setRes] = useState([])
   const exportToExcel = () => {
     // Convert the list of items into an array of arrays for the Excel sheet
     const wsData = [
-      ["ID", "STATUS", "CUSTOMER", "DATE", "SLOT", "PAID", "OVERDUE"], // Column headers
+      ["ID", "Name", "Description", "Category", "Person"], // Column headers
       ...res.map((item) => [
-        item?.booking_id,
-        item?.status,
-        item?.customer_name,
-        item?.date,
-        `${item?.start_time} to ${item?.end_time}`,
-        item?.paid_amount,
-        item?.remaining,
+        item.id,
+        item.name,
+        item.description,
+        item.category,
+        item.person,
       ]), // Data rows
     ];
 
@@ -37,17 +36,17 @@ const [res , setRes] = useState([])
     XLSX.utils.book_append_sheet(wb, ws, "Items");
 
     // Generate a download link for the Excel file
-    XLSX.writeFile(wb, "items.xlsx");
+    XLSX.writeFile(wb, "Games.xlsx");
   };
 
 
   
   return (
-    <button onClick={exportToExcel} className="px-6 py-2 bg-primary1 text-white rounded-lg flex items-center justify-center gap-2">
+    <button onClick={exportToExcel} className="md:px-6 px-3 bg-primary1 text-white rounded-lg flex items-center justify-center gap-2">
             <IoDownloadOutline />
             <span className="hidden md:block">Export</span>
           </button>
   )
 }
 
-export default Export_Booking
+export default Export_Games

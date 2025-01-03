@@ -33,8 +33,8 @@ export const AuthProvider = ({ children }) => {
       body: JSON.stringify({ email: email, password: password })
     });
     const data = await res.json();
-    
-    if (data) {
+    if(data)
+      {    
       const token = data.access_token
       localStorage.setItem("token", token);
       console.log(token);
@@ -47,9 +47,8 @@ export const AuthProvider = ({ children }) => {
       console.log(user_data);
       
       router.push("/");
-    } else {
-      throw new Error("Invalid login");
-    }
+      }
+
   };
 
   const logout = () => {

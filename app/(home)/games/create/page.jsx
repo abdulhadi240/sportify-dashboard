@@ -11,12 +11,7 @@ const Page = () => {
   const [category, setCategory] = useState("outdoor");
   const [person, setPerson] = useState("5 V 5");
   const [date, setDate] = useState(getCurrentDate());
-  const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
-  const [images, setImages] = useState([]);
-  const [videos, setVideos] = useState([]);
-
-
 
 
   function getCurrentDate() {
@@ -26,11 +21,8 @@ const Page = () => {
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
   }
-
-
-
   const router = useRouter()
-  // Handles the form submission
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
@@ -39,8 +31,6 @@ const Page = () => {
       toast.error("Please fill all required fields.");
       return;
     }
-
-    
 
     const result = await CreateGame(name, category, person, description,token); // Adjust min_down_payment as needed
     if (!result.success) {

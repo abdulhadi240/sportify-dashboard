@@ -20,13 +20,7 @@ export default async function Page() {
         <h2 className="text-3xl font-bold tracking-tight">Reviews</h2>
         <div className="flex gap-3">
           <Export/>
-          <Link
-            href="/reviews/create"
-            className="px-6 bg-primary1 text-white rounded-lg flex items-center justify-center gap-2"
-          >
-            <FaPlus />
-            <span className="hidden md:block">Create Review</span>
-          </Link>
+          
         </div>
       </div>
       <div className="w-full overflow-auto bg-white rounded-lg border border-gray-200">

@@ -1,7 +1,7 @@
 import React from "react";
 import Login from "@/components/login";
 import { AuthProvider } from "@/components/context/AuthContext";
-import '../../app/globals.css';
+import '../globals.css';
 const LoginPage = () => {
   return (
     <html>

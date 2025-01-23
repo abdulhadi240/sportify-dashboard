@@ -31,7 +31,9 @@ export default function RootLayout({
         >
           <SidebarProvider>
             <div className="flex h-screen overflow-hidden">
+              <Sidebar />
               <div className="flex-1 overflow-y-auto">
+                <Header />
                 <Suspense fallback={<Skeleton/>}>
                 <main className="p-6">{children}</main>
                 </Suspense>

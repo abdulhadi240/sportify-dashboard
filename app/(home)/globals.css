@@ -80,3 +80,15 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+.select__control {
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 4px;
+}
+
+.select__multi-value {
+  background-color: #e5e7eb;
+  color: #111827;
+}

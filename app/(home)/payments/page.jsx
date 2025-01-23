@@ -2,7 +2,7 @@
 import React, { Suspense } from "react";
 import Link from "next/link";
 import { FaPlus } from "react-icons/fa";
-import BodyOfTable from "@/components/BodyOfTable";
+import BodyOfPayment from "@/components/BodyOfPayment";
 import {
   Table,
   TableHead,
@@ -35,17 +35,18 @@ export default async function Page() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>CUSTOMER</TableHead>
-              <TableHead>GROUND</TableHead>
+              <TableHead>ID</TableHead>
+              <TableHead>BOOKING_ID</TableHead>
               <TableHead>PAYMENT</TableHead>
               <TableHead>DATE</TableHead>
               <TableHead>METHOD</TableHead>
               <TableHead>STATUS</TableHead>
+              <TableHead>SCREENSHOT</TableHead>
               <TableHead>ACTION</TableHead>
             </TableRow>
           </TableHeader>
           <Suspense fallback={<Skeleton />}>
-            <BodyOfTable/>
+            <BodyOfPayment/>
           </Suspense>
         </Table>
       </div>

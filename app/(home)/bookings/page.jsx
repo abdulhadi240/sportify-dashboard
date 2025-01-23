@@ -8,7 +8,7 @@ import { BookingTable } from "@/components/bookings/booking-table";
 import { AllGames, Courts, get_all_bookings } from "@/actions/Grounds";
 import Export_Booking from "@/components/bookings/Export_Booking";
 import { useRouter } from "next/navigation";
-
+import { useSearchParams } from "next/navigation";
 export default function BookingsPage() {
   const [idQuery, setIdQuery] = useState("");
   const [nameQuery, setNameQuery] = useState("");
@@ -18,7 +18,16 @@ export default function BookingsPage() {
   const [arenas, setArena] = useState([]);
   const [games, setGames] = useState([]);
   const router = useRouter();
+  const serachparams = useSearchParams();
+  const searchParams = useSearchParams();
 
+  // Read 'search' param from URL
+  const search = searchParams.get("search") || "";
+
+  // Only update idQuery when 'search' changes
+  useEffect(() => {
+    setIdQuery(search);
+  }, [search]);
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -79,8 +88,8 @@ export default function BookingsPage() {
             {arenas.map((arena, index) => (
               <Button
                 key={index}
-                variant={selectedCourt === arena.name ? "default" : "outline"}
-                className="text-sm"
+                
+                className={selectedCourt === arena.name ? "bg-primary1 text-sm hover:bg-primary1/80" : "bg-white text-black border-[1px] hover:bg-primary1 hover:text-white"}
                 onClick={() =>
                   setSelectedCourt(
                     selectedCourt === arena.name ? null : arena.name
@@ -97,8 +106,7 @@ export default function BookingsPage() {
             {games.map((game, index) => (
               <Button
                 key={index}
-                variant={selectedGame === game.name ? "default" : "outline"}
-                className="text-sm"
+                className={selectedGame === game.name ? "bg-primary1 text-sm hover:bg-primary1/80" : "bg-white text-black border-[1px] hover:bg-primary1 hover:text-white"}
                 onClick={() =>
                   setSelectedGame(selectedGame === game.name ? null : game.name)
                 }

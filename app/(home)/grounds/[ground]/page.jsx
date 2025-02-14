@@ -138,6 +138,7 @@ const Page = ({ params }) => {
     const updatedData = await UpdateCourt(
       courtId,
       courtData.name,
+      courtData.
       courtData.description,
       courtData.court_location,
       parsedHourlyRate,
